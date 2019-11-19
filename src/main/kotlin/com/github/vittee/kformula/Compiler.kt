@@ -18,7 +18,28 @@ class Compiler {
     }
 
     private fun readExprAdd(): Expr {
-        return readExprMulti()
+        var left = readExprMulti()
+        do {
+            val tt = tokenizer.testDeleteAny(setOf(PLUS, MINUS, OR))
+            if (tt == NONE) break
+
+            val right = readExprMulti()
+
+            when (tt) {
+                PLUS -> {
+                    left = AddExpr(left, right)
+                }
+                MINUS -> {
+                    TODO("expr minus")
+                }
+                OR -> {
+                    TODO("expr or")
+                }
+                else -> TODO("????")
+            }
+        } while(true)
+
+        return left
     }
 
     private fun readExprMulti(): Expr {

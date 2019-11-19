@@ -199,7 +199,7 @@ internal class Tokenizer(private val source: String) {
 
     private fun peek() = source[pos]
 
-    private fun Char.isValidVariableChar() = (this.toByte() > 127 && this.toInt() != 160)
+    private fun Char.isValidVariableChar() = (this.toLong() > 127 && this.toInt() != 160)
             || (this in 'A'..'Z')
             || (this in 'a'..'z')
             || (this in '0'..'9')

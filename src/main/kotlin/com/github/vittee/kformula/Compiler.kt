@@ -25,13 +25,9 @@ class Compiler {
 
             val right = readExprMulti()
 
-            when (tt) {
-                PLUS -> {
-                    left = AddExpr(left, right)
-                }
-                MINUS -> {
-                    TODO("expr minus")
-                }
+            left = when (tt) {
+                PLUS -> AddExpr(left, right)
+                MINUS -> SubtractExpr(left, right)
                 OR -> {
                     TODO("expr or")
                 }

@@ -30,9 +30,8 @@ internal class NegateExpr(right: Expr) : UnaryExpr(right) {
 }
 
 internal class AddExpr(left: Expr, right: Expr): BinaryExpr(left, TokenType.PLUS, right) {
-    override fun eval(): BigDecimal = left.eval().add(right.eval())
+    override fun eval(): BigDecimal = left.eval() + right.eval()
 }
 
 internal class SubtractExpr(left: Expr, right: Expr): BinaryExpr(left, TokenType.MINUS, right) {
-    override fun eval(): BigDecimal = left.eval().subtract(right.eval())
-}
+    override fun eval(): BigDecimal = left.eval() - right.eval()

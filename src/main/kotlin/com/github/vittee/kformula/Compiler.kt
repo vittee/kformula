@@ -14,7 +14,26 @@ class Compiler {
     }
 
     private fun readExpr(): Expr {
-        return readExprAdd()
+        var left = readExprAdd()
+        do {
+            val tt = tokenizer.testDeleteAny(setOf(EQUAL, EQUAL_EQUAL, NOT_EQ, EX_EQ, LESS, LESS_EQ, GREATER, GREATER_EQ))
+            if (tt == NONE) break
+
+            val right = readExprAdd()
+
+            left = when (tt) {
+                EQUAL, EQUAL_EQUAL -> EqualExpr(left, right)
+                NOT_EQ, EX_EQ -> NotEqualExpr(left, right)
+                LESS -> LessExpr(left, right)
+                LESS_EQ -> LessEqualExpr(left, right)
+                GREATER -> GreaterExpr(left, right)
+                GREATER_EQ -> GreaterEqualExpr(left, right)
+                else -> TODO("????")
+            }
+
+        } while (true)
+
+        return left
     }
 
     private fun readExprAdd(): Expr {

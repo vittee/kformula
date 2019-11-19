@@ -28,6 +28,8 @@ internal abstract class UnaryExpr(val right: Expr) : Expr()
 
 internal abstract class BinaryExpr(val left: Expr, val op: TokenType, val right: Expr) : Expr()
 
+internal abstract class RelationalOperatorExpr(left: Expr, op: TokenType, right: Expr) : BinaryExpr(left, op, right)
+
 internal class NegateExpr(right: Expr) : UnaryExpr(right) {
     override fun eval(): BigDecimal = right.eval().negate()
 }
@@ -54,6 +56,32 @@ internal class ModuloExpr(left: Expr, right: Expr): BinaryExpr(left, TokenType.M
 
 internal class PowerExpr(left: Expr, right: Expr): BinaryExpr(left, TokenType.EXPONENT, right) {
     override fun eval(): BigDecimal = left.eval() pow right.eval()
+}
+
+internal class EqualExpr(left: Expr, right: Expr) : RelationalOperatorExpr(left, TokenType.EQUAL, right) {
+    override fun eval(): BigDecimal = (left.eval() == right.eval()).toBigDecimal()
+}
+
+internal class NotEqualExpr(left: Expr, right: Expr) : RelationalOperatorExpr(left, TokenType.EQUAL, right) {
+    override fun eval(): BigDecimal = (left.eval() != right.eval()).toBigDecimal()
+}
+
+internal class LessExpr(left: Expr, right: Expr) : RelationalOperatorExpr(left, TokenType.LESS, right) {
+    override fun eval(): BigDecimal = (left.eval() < right.eval()).toBigDecimal()
+}
+
+internal class LessEqualExpr(left: Expr, right: Expr) : RelationalOperatorExpr(left, TokenType.LESS, right) {
+    override fun eval(): BigDecimal = (left.eval() <= right.eval()).toBigDecimal()
+}
+
+internal class GreaterExpr(left: Expr, right: Expr) : RelationalOperatorExpr(left, TokenType.LESS, right) {
+    override fun eval(): BigDecimal = (left.eval() > right.eval()).toBigDecimal()
+}
+
+internal class GreaterEqualExpr(left: Expr, right: Expr) : RelationalOperatorExpr(left, TokenType.LESS, right) {
+    override fun eval(): BigDecimal = (left.eval() >= right.eval()).toBigDecimal()
+}
+
 private fun Boolean.toBigDecimal() = if (this) BigDecimal.ONE else BigDecimal.ZERO
 
 private infix fun BigDecimal.pow(n: BigDecimal): BigDecimal {

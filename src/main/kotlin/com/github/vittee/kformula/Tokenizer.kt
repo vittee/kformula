@@ -139,7 +139,7 @@ internal class Tokenizer(private val source: String) {
                 in '0'..'9' ->  tokenBuffer.append(advance())
                 '.' -> {
                     tokenBuffer.append(advance())
-                    while (peek() in '0'..'9') {
+                    while (available() > 0 && peek() in '0'..'9') {
                         tokenBuffer.append(advance())
                     }
                 }

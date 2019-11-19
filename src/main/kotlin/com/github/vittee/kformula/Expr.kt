@@ -68,8 +68,7 @@ private infix fun BigDecimal.pow(n: BigDecimal): BigDecimal {
     val doublePow = BigDecimal(toDouble().pow(remainderOfRight.toDouble()))
 
     var result = intPow.multiply(doublePow, MathContext.DECIMAL64)
-    if (signOfRight == -1) result = BigDecimal
-        .ONE.divide(result, MathContext.DECIMAL64.precision, RoundingMode.HALF_UP)
+    if (signOfRight == -1) result = BigDecimal.ONE.divide(result, MathContext.DECIMAL64.precision, RoundingMode.HALF_UP)
 
     return result
 }

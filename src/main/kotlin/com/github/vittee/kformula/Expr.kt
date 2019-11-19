@@ -23,6 +23,8 @@ internal class NumberExpr(private val value: BigDecimal) : Expr() {
 
 internal abstract class UnaryExpr(val right: Expr) : Expr()
 
+internal abstract class BinaryExpr(val left: Expr, val op: TokenType, val right: Expr) : Expr()
+
 internal class NegateExpr(right: Expr) : UnaryExpr(right) {
     override fun eval(): BigDecimal = right.eval().negate()
 }

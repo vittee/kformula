@@ -91,10 +91,12 @@ class Compiler {
             TODO("readNotTerm")
         }
         TRUE -> {
-            TODO("create 1")
+            tokenizer.killToken()
+            NumberExpr(BigDecimal.ONE)
         }
         FALSE -> {
-            TODO("create 0")
+            tokenizer.killToken()
+            NumberExpr(BigDecimal.ZERO)
         }
         B_LEFT -> {
             tokenizer.killToken()

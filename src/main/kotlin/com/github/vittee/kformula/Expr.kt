@@ -28,3 +28,7 @@ internal abstract class BinaryExpr(val left: Expr, val op: TokenType, val right:
 internal class NegateExpr(right: Expr) : UnaryExpr(right) {
     override fun eval(): BigDecimal = right.eval().negate()
 }
+
+internal class AddExpr(left: Expr, right: Expr): BinaryExpr(left, TokenType.PLUS, right) {
+    override fun eval(): BigDecimal = left.eval().add(right.eval())
+}

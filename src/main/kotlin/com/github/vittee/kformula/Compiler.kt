@@ -39,7 +39,24 @@ class Compiler {
     }
 
     private fun readExprMulti(): Expr {
-        return readTerm()
+        var left = readTerm()
+        do {
+            val tt = tokenizer.testDeleteAny(setOf(TIMES, DIVIDE, MOD, AND, EXPONENT))
+            if (tt == NONE) break
+
+            val right = readTerm()
+
+            left = when (tt) {
+                TIMES -> MultiplyExpr(left, right)
+                DIVIDE -> DivideExpr(left, right)
+                MOD -> ModuloExpr(left, right)
+                AND -> TODO("expr and")
+                EXPONENT -> PowerExpr(left, right)
+                else -> TODO("???")
+            }
+        } while (true)
+
+        return left
     }
 
     private fun readTerm(): Expr = when (tokenizer.testAny(setOf(PLUS, MINUS, NOT, TRUE, FALSE, B_LEFT))) {

@@ -21,21 +21,12 @@ internal class Tokenizer(private val source: String) {
         consumeToken()
     }
 
-    fun testAny(types: Set<TokenType>): TokenType {
-        if (token == null) {
-            readToken()
-            if (token == null) {
-                return TokenType.NONE
-            }
+    fun testAny(types: Set<TokenType>) = ensureToken()?.let {
+        when {
+            types.contains(it.type) -> it.type
+            else -> NONE
         }
-
-        val tok = token!!
-
-        return when {
-            types.contains(tok.type) -> tok.type
-            else -> TokenType.NONE
-        }
-    }
+    } ?: NONE
 
     fun testDelete(type: TokenType) = ensureToken()
         ?.takeIf { it.type == type }
@@ -44,6 +35,14 @@ internal class Tokenizer(private val source: String) {
             true
         }
         ?: false
+
+    fun testDeleteAny(types: Set<TokenType>) = ensureToken()
+        ?.takeIf { types.contains(it.type) }
+        ?.let {
+            killToken()
+            it.type
+        }
+        ?: NONE
 
     fun testNumber() = ensureToken()?.let { t -> t.text.isNotEmpty() && (t.type == NUMBER) } ?: false
 

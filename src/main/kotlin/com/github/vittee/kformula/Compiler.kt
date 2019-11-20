@@ -48,9 +48,7 @@ class Compiler {
             left = when (tt) {
                 PLUS -> AddExpr(left, right)
                 MINUS -> SubtractExpr(left, right)
-                OR -> {
-                    TODO("expr or")
-                }
+                OR -> LogicalOrExpr(left, right)
                 else -> throw NeverError()
             }
         } while(true)
@@ -70,7 +68,7 @@ class Compiler {
                 TIMES -> MultiplyExpr(left, right)
                 DIVIDE -> DivideExpr(left, right)
                 MOD -> ModuloExpr(left, right)
-                AND -> TODO("expr and")
+                AND -> LogicalAndExpr(left, right)
                 EXPONENT -> PowerExpr(left, right)
                 else -> throw NeverError()
             }
@@ -79,7 +77,7 @@ class Compiler {
         return left
     }
 
-    private fun readTerm(): Expr = when (tokenizer.testAny(setOf(PLUS, MINUS, NOT, TRUE, FALSE, B_LEFT))) {
+    private fun readTerm(): Expr = when (tokenizer.testAny(setOf(PLUS, MINUS, NOT, EXCLAMATION, TRUE, FALSE, B_LEFT))) {
         PLUS -> {
             tokenizer.killToken()
             readTerm()
@@ -88,8 +86,9 @@ class Compiler {
             tokenizer.killToken()
             readNegation()
         }
-        NOT -> {
-            TODO("readNotTerm")
+        EXCLAMATION, NOT -> {
+            tokenizer.killToken()
+            readNotTerm()
         }
         TRUE -> {
             tokenizer.killToken()
@@ -111,6 +110,8 @@ class Compiler {
     }
 
     private fun readNegation() = NegateExpr(readTerm())
+
+    private fun readNotTerm() = LogicalNotExpr(readTerm())
 
     private fun readIfExpr() {
 

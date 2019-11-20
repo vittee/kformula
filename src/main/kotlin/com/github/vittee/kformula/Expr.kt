@@ -30,6 +30,8 @@ internal abstract class BinaryExpr(val left: Expr, val op: TokenType, val right:
 
 internal abstract class RelationalOperatorExpr(left: Expr, op: TokenType, right: Expr) : BinaryExpr(left, op, right)
 
+internal abstract class LogicalOperatorExpr(left: Expr, op: TokenType, right: Expr) : BinaryExpr(left, op, right)
+
 internal class NegateExpr(right: Expr) : UnaryExpr(right) {
     override fun eval(): BigDecimal = right.eval().negate()
 }
@@ -82,7 +84,21 @@ internal class GreaterEqualExpr(left: Expr, right: Expr) : RelationalOperatorExp
     override fun eval(): BigDecimal = (left.eval() >= right.eval()).toBigDecimal()
 }
 
+internal class LogicalOrExpr(left: Expr, right: Expr): LogicalOperatorExpr(left, TokenType.OR, right) {
+    override fun eval(): BigDecimal = left.eval() or right.eval()
+}
+
+internal class LogicalAndExpr(left: Expr, right: Expr): LogicalOperatorExpr(left, TokenType.OR, right) {
+    override fun eval(): BigDecimal = left.eval() and right.eval()
+}
+
+internal class LogicalNotExpr(right: Expr): UnaryExpr(right) {
+    override fun eval(): BigDecimal = right.eval().toBool().not().toBigDecimal()
+}
+
 private fun Boolean.toBigDecimal() = if (this) BigDecimal.ONE else BigDecimal.ZERO
+
+private fun BigDecimal.toBool() = this != BigDecimal.ZERO
 
 private infix fun BigDecimal.pow(n: BigDecimal): BigDecimal {
     var right = n
@@ -100,3 +116,7 @@ private infix fun BigDecimal.pow(n: BigDecimal): BigDecimal {
 
     return result
 }
+
+private infix fun BigDecimal.or(with: BigDecimal) = (this.toBool() || with.toBool()).toBigDecimal()
+
+private infix fun BigDecimal.and(with: BigDecimal) = (this.toBool() && with.toBool()).toBigDecimal()

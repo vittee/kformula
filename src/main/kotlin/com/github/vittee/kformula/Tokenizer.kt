@@ -14,7 +14,7 @@ internal class Tokenizer(private val source: String) {
 
     private val tokenBuffer = StringBuilder()
 
-    private fun available() = source.length - pos;
+    fun available() = source.length - pos;
 
     private fun readToken() {
         killToken()
@@ -63,29 +63,35 @@ internal class Tokenizer(private val source: String) {
         return token
     }
 
+    fun skipWhitespace() {
+        while (available() > 0 && peek().isWhitespace()) {
+            advance()
+        }
+    }
+
+    private fun next(): Char {
+        skipWhitespace()
+        return advance()
+    }
+
+    private fun match(expect: Char): Boolean {
+        val next = peek()
+
+        if (next == expect) {
+            tokenBuffer.append(next)
+            advance()
+            return true
+        }
+
+        return false
+    }
+
     private fun consumeToken() {
         if (available() <= 0) {
             return
         }
 
-        var c = advance()
-        while (available() > 0 && c.isWhitespace()) {
-            c = advance()
-        }
-
-        fun match(expect: Char): Boolean {
-            val next = peek()
-
-            if (next == expect) {
-                tokenBuffer.append(next)
-                advance()
-                return true
-            }
-
-            return false
-        }
-
-        when (c) {
+        when (val c = next()) {
             ' ', '\t', '\r', '\n'  -> { }
             '+', '-', '*', '/', '^', '(', ')', ',' -> tokenBuffer.append(c)
             '!','>', '='  -> {
@@ -121,8 +127,10 @@ internal class Tokenizer(private val source: String) {
                     NONE -> TokenType.NAME
                     else -> tt
                 }
-
                 token = Token(tokenBuffer.toString(), type)
+                return
+            }
+            Char.MIN_VALUE -> {
                 return
             }
             else -> {
@@ -194,9 +202,9 @@ internal class Tokenizer(private val source: String) {
         }
     }
 
-    private fun advance() = source[pos++]
+    private fun advance() = if (pos < source.length) source[pos++] else Char.MIN_VALUE
 
-    private fun peek() = source[pos]
+    private fun peek() = if (pos < source.length) source[pos] else Char.MIN_VALUE
 
     private fun Char.isValidVariableChar() = (this.toLong() > 127 && this.toInt() != 160)
             || (this in 'A'..'Z')

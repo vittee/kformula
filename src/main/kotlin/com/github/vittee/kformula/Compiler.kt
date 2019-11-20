@@ -4,6 +4,7 @@ import com.github.vittee.kformula.TokenType.*
 import java.math.BigDecimal
 
 open class CompileError(s: String) : RuntimeException("Parse Error: $s")
+class NoMoreExpressionError : CompileError("End of expression expected")
 class NeverError : CompileError("Should not happen")
 
 class Compiler {
@@ -11,7 +12,17 @@ class Compiler {
 
     fun compile(source: String): Expr {
         tokenizer = Tokenizer(source)
-        return readExpr()
+        val e = readExpr()
+
+        tokenizer.token?.let { throw NoMoreExpressionError()  }
+
+        tokenizer.killToken()
+        tokenizer.skipWhitespace()
+        if (tokenizer.available() > 0) {
+            throw NoMoreExpressionError()
+        }
+
+        return e
     }
 
     private fun readExpr(): Expr {

@@ -3,7 +3,8 @@ package com.github.vittee.kformula
 import com.github.vittee.kformula.TokenType.*
 import java.math.BigDecimal
 
-class CompileError(s: String) : RuntimeException("Parse Error: $s")
+open class CompileError(s: String) : RuntimeException("Parse Error: $s")
+class NeverError : CompileError("Should not happen")
 
 class Compiler {
     private var tokenizer = Tokenizer("")
@@ -28,7 +29,7 @@ class Compiler {
                 LESS_EQ -> LessEqualExpr(left, right)
                 GREATER -> GreaterExpr(left, right)
                 GREATER_EQ -> GreaterEqualExpr(left, right)
-                else -> TODO("????")
+                else -> throw NeverError()
             }
 
         } while (true)
@@ -50,7 +51,7 @@ class Compiler {
                 OR -> {
                     TODO("expr or")
                 }
-                else -> TODO("????")
+                else -> throw NeverError()
             }
         } while(true)
 
@@ -71,7 +72,7 @@ class Compiler {
                 MOD -> ModuloExpr(left, right)
                 AND -> TODO("expr and")
                 EXPONENT -> PowerExpr(left, right)
-                else -> TODO("???")
+                else -> throw NeverError()
             }
         } while (true)
 

@@ -132,7 +132,7 @@ class Compiler {
 
     private fun readImmediate(): Expr {
         if (!tokenizer.testNumber()) {
-            throw CompileError("Number expected")
+            throw CompileError("Number or expression expected")
         }
 
         val v = tokenizer.token!!.literal as BigDecimal

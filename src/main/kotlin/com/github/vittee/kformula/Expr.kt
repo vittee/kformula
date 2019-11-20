@@ -8,9 +8,6 @@ import kotlin.math.pow
 sealed class Expr {
     abstract fun eval(): BigDecimal
 
-    val subExprCount: Int
-        get() = 0
-
     override fun equals(other: Any?): Boolean {
         return this === other
     }
@@ -102,6 +99,16 @@ internal class IfThenElseValueExpr(val cond: Expr, val trueExpr: Expr, val false
         cond.eval().toBool() -> trueExpr
         else -> falseExpr
     }.eval()
+}
+
+@Suppress("MemberVisibilityCanBePrivate")
+internal open class InExpr(val value: Expr, val begin: Expr, val end: Expr): Expr() {
+    override fun eval(): BigDecimal = (value.eval() in begin.eval()..end.eval()).toBigDecimal()
+}
+
+@Suppress("MemberVisibilityCanBePrivate")
+internal class NotInExpr(val right: Expr): Expr() {
+    override fun eval(): BigDecimal = right.eval().toBool().not().toBigDecimal()
 }
 
 private fun Boolean.toBigDecimal() = if (this) BigDecimal.ONE else BigDecimal.ZERO

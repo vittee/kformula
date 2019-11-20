@@ -27,22 +27,25 @@ class Compiler {
 
     private fun readExpr(): Expr {
         var left = readExprAdd()
-        do {
-            val tt = tokenizer.testDeleteAny(setOf(EQUAL, EQUAL_EQUAL, NOT_EQ, EX_EQ, LESS, LESS_EQ, GREATER, GREATER_EQ))
-            if (tt == NONE) break
-
-            val right = readExprAdd()
-
+        loop@ do {
+            val tt = tokenizer.testDeleteAny(setOf(EQUAL, EQUAL_EQUAL, NOT_EQ, EX_EQ, LESS, LESS_EQ, GREATER, GREATER_EQ, IN))
             left = when (tt) {
-                EQUAL, EQUAL_EQUAL -> EqualExpr(left, right)
-                NOT_EQ, EX_EQ -> NotEqualExpr(left, right)
-                LESS -> LessExpr(left, right)
-                LESS_EQ -> LessEqualExpr(left, right)
-                GREATER -> GreaterExpr(left, right)
-                GREATER_EQ -> GreaterEqualExpr(left, right)
-                else -> throw NeverError()
-            }
+                NONE -> break@loop
+                IN -> readInExpr(left)
+                else -> {
+                    val right = readExprAdd()
 
+                    when (tt) {
+                        EQUAL, EQUAL_EQUAL -> EqualExpr(left, right)
+                        NOT_EQ, EX_EQ -> NotEqualExpr(left, right)
+                        LESS -> LessExpr(left, right)
+                        LESS_EQ -> LessEqualExpr(left, right)
+                        GREATER -> GreaterExpr(left, right)
+                        GREATER_EQ -> GreaterEqualExpr(left, right)
+                        else -> throw NeverError()
+                    }
+                }
+            }
         } while (true)
 
         return left
@@ -50,19 +53,23 @@ class Compiler {
 
     private fun readExprAdd(): Expr {
         var left = readExprMulti()
-        do {
-            val tt = tokenizer.testDeleteAny(setOf(PLUS, MINUS, OR))
-            if (tt == NONE) break
 
-            val right = readExprMulti()
-
+        loop@ do {
+            val tt = tokenizer.testDeleteAny(setOf(PLUS, MINUS, OR, NOT))
             left = when (tt) {
-                PLUS -> AddExpr(left, right)
-                MINUS -> SubtractExpr(left, right)
-                OR -> LogicalOrExpr(left, right)
-                else -> throw NeverError()
+                NONE -> break@loop
+                NOT -> readNotInExpr(left)
+                else -> {
+                    val right = readExprMulti()
+                    when (tt) {
+                        PLUS -> AddExpr(left, right)
+                        MINUS -> SubtractExpr(left, right)
+                        OR -> LogicalOrExpr(left, right)
+                        else -> throw NeverError()
+                    }
+                }
             }
-        } while(true)
+        } while (true)
 
         return left
     }
@@ -132,13 +139,35 @@ class Compiler {
 
         tokenizer.testDelete(THEN)
 
-        val true_expr = readExpr()
-        val false_expr = when {
+        val trueExpr = readExpr()
+        val falseExpr = when {
             tokenizer.testDelete(ELSE) -> readExpr()
             else -> NumberExpr(BigDecimal.ZERO)
         }
 
-        return IfThenElseValueExpr(cond, true_expr, false_expr)
+        return IfThenElseValueExpr(cond, trueExpr, falseExpr)
+    }
+
+    private fun readInExpr(left: Expr): Expr {
+        val hasParenthesis = tokenizer.testDelete(B_LEFT)
+
+        val begin = readExpr()
+
+        if (tokenizer.testDeleteAny(setOf(BETWEEN, DOT_DOT)) == NONE) {
+            throw CompileError("BETWEEN/.. expected")
+        }
+
+        val end = if (hasParenthesis) readBracket() else readExpr()
+
+        return InExpr(left, begin, end)
+    }
+
+    private fun readNotInExpr(left: Expr): Expr {
+        if (!tokenizer.testDelete(IN)) {
+            throw CompileError("IN expected")
+        }
+
+        return NotInExpr(readInExpr(left))
     }
 
     private fun readBracket(): Expr {
@@ -151,6 +180,10 @@ class Compiler {
     }
 
     private fun readName(): Expr {
+        if (!tokenizer.testName()) {
+            throw CompileError("Name expected")
+        }
+
         TODO("Name lookup")
     }
 

@@ -4,6 +4,8 @@ import com.github.vittee.kformula.TokenType.*
 
 internal data class Token(val text: String, val type: TokenType, val literal: Any? = null)
 
+class ParseError(s: String) : RuntimeException(s)
+
 class InvalidChar(c: Char) : RuntimeException("Invalid character $c")
 
 internal class Tokenizer(private val source: String) {
@@ -103,7 +105,12 @@ internal class Tokenizer(private val source: String) {
                 match('>') || match('=')
             }
             '.' -> {
-                // TODO: Dot, DotDot
+                if (!match('.')) {
+                    throw ParseError("DOT expected, but ${peek()} found")
+                }
+
+                killToken()
+                tokenBuffer.append("..")
             }
             in '0'..'9' -> {
                 tokenBuffer.append(c)
@@ -146,10 +153,19 @@ internal class Tokenizer(private val source: String) {
             when (peek()) {
                 in '0'..'9' ->  tokenBuffer.append(advance())
                 '.' -> {
-                    tokenBuffer.append(advance())
+                    advance()
+
+                    if (peek() == '.') { // DOT DOT
+                        pos--
+                        break@loop
+                    }
+
+                    tokenBuffer.append('.')
                     while (available() > 0 && peek() in '0'..'9') {
                         tokenBuffer.append(advance())
                     }
+
+                    break@loop
                 }
                 else -> break@loop
             }
@@ -191,6 +207,7 @@ internal class Tokenizer(private val source: String) {
             "<" -> TokenType.LESS
             "<=" -> TokenType.LESS_EQ
             "<>" -> TokenType.NOT_EQ
+            ".." -> TokenType.DOT_DOT
             "mod" -> TokenType.MOD
             "and" -> TokenType.AND
             "or" -> TokenType.OR
@@ -200,7 +217,8 @@ internal class Tokenizer(private val source: String) {
             "if" -> TokenType.IF
             "then" -> TokenType.THEN
             "else" -> TokenType.ELSE
-            // TODO: in
+            "in" -> TokenType.IN
+            "between" -> TokenType.BETWEEN
             else -> TokenType.NONE
         }
     }

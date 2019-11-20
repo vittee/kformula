@@ -197,6 +197,9 @@ internal class Tokenizer(private val source: String) {
             "not" -> TokenType.NOT
             "true" -> TokenType.TRUE
             "false" -> TokenType.FALSE
+            "if" -> TokenType.IF
+            "then" -> TokenType.THEN
+            "else" -> TokenType.ELSE
             // TODO: in
             else -> TokenType.NONE
         }

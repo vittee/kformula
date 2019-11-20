@@ -96,6 +96,14 @@ internal class LogicalNotExpr(right: Expr): UnaryExpr(right) {
     override fun eval(): BigDecimal = right.eval().toBool().not().toBigDecimal()
 }
 
+@Suppress("MemberVisibilityCanBePrivate")
+internal class IfThenElseValueExpr(val cond: Expr, val trueExpr: Expr, val falseExpr: Expr) : Expr() {
+    override fun eval(): BigDecimal = when {
+        cond.eval().toBool() -> trueExpr
+        else -> falseExpr
+    }.eval()
+}
+
 private fun Boolean.toBigDecimal() = if (this) BigDecimal.ONE else BigDecimal.ZERO
 
 private fun BigDecimal.toBool() = this != BigDecimal.ZERO

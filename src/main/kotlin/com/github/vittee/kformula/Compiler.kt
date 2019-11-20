@@ -88,7 +88,7 @@ class Compiler {
         return left
     }
 
-    private fun readTerm(): Expr = when (tokenizer.testAny(setOf(PLUS, MINUS, NOT, EXCLAMATION, TRUE, FALSE, B_LEFT))) {
+    private fun readTerm(): Expr = when (tokenizer.testAny(setOf(PLUS, MINUS, NOT, EXCLAMATION, TRUE, FALSE, B_LEFT, IF))) {
         PLUS -> {
             tokenizer.killToken()
             readTerm()
@@ -113,7 +113,10 @@ class Compiler {
             tokenizer.killToken()
             readBracket()
         }
-        // TODO: IF -> ReadIfExpr
+        IF -> {
+            tokenizer.killToken()
+            readIfExpr()
+        }
         else -> when {
             tokenizer.testName() -> readName()
             else -> readImmediate()
@@ -124,8 +127,18 @@ class Compiler {
 
     private fun readNotTerm() = LogicalNotExpr(readTerm())
 
-    private fun readIfExpr() {
+    private fun readIfExpr(): Expr {
+        val cond = readExpr()
 
+        tokenizer.testDelete(THEN)
+
+        val true_expr = readExpr()
+        val false_expr = when {
+            tokenizer.testDelete(ELSE) -> readExpr()
+            else -> NumberExpr(BigDecimal.ZERO)
+        }
+
+        return IfThenElseValueExpr(cond, true_expr, false_expr)
     }
 
     private fun readBracket(): Expr {

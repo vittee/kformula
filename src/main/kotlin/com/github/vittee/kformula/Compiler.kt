@@ -163,7 +163,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
         return InBetweenExpr(left, begin, end)
     }
 
-    private fun readNotInExpr(left: Expr): Expr {
+    private fun readNotInExpr(left: Expr): NotInBetweenExpr {
         if (!tokenizer.testDelete(IN)) {
             throw CompileError("IN expected")
         }
@@ -193,7 +193,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
         return readFunc(symbol)
     }
 
-    private fun readFunc(symbol: FunctionSymbol): Expr {
+    private fun readFunc(symbol: FunctionSymbol): FunctionExpr {
         if (!tokenizer.testDelete(B_LEFT)) {
             throw CompileError("( expected")
         }
@@ -247,7 +247,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
         }
     }
 
-    private fun readVariable(): Expr {
+    private fun readVariable(): DataSymbolExpr {
         if (!tokenizer.testVariable()) {
             throw CompileError("Variable expected")
         }
@@ -264,7 +264,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
         return DataSymbolExpr(symbol)
     }
 
-    private fun readImmediate(): Expr {
+    private fun readImmediate(): NumberExpr {
         if (!tokenizer.testNumber()) {
             throw CompileError("Number or expression expected")
         }

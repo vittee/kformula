@@ -1,6 +1,7 @@
 package com.github.vittee.kformula
 
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 abstract class BaseFormula {
@@ -50,7 +51,91 @@ abstract class BaseFormula {
     }
 
     protected fun addBuiltInFunctions() {
+        addAbsFunction()
+        addSumFunction()
+        addAverageFunction()
+        addFloorFunction()
+        addCeilFunction()
+        addRoundFunction()
+        addRoundToFunction()
+        addMinFunction()
+        addMaxFunction()
+        addClampFunction()
+        addSqrtFunction()
+    }
 
+    protected fun addSqrtFunction() {
+        addFunction("sqrt", "v") { args ->
+            args["v"].eval()!! pow 0.5.toBigDecimal()
+        }
+    }
+
+    protected fun addClampFunction() {
+        addFunction("clamp", "v", "min", "max") { args ->
+            args["v"].eval()!!.coerceIn(
+                args["min"].eval()!!,
+                args["max"].eval()!!
+            )
+        }
+    }
+
+    protected fun addMaxFunction() {
+        addFunction("max", "...v") { args ->
+            args["v"].rest.eval().max()!!
+        }
+    }
+
+    protected fun addMinFunction() {
+        addFunction("min", "...v") { args ->
+            args["v"].rest.eval().min()!!
+        }
+    }
+
+    protected fun addRoundToFunction() {
+        addFunction("roundTo", "v", "scale") { args ->
+            args["v"].eval()!!.setScale(
+                args["scale"].eval()?.toInt() ?: 0,
+                RoundingMode.HALF_EVEN
+            )
+        }
+    }
+
+    protected fun addRoundFunction() {
+        addFunction("round", "v") { args ->
+            args["v"].eval()!!.setScale(0, RoundingMode.HALF_EVEN)
+        }
+    }
+
+    protected fun addCeilFunction() {
+        addFunction("ceil", "v") { args ->
+            args["v"].eval()!!.setScale(0, RoundingMode.CEILING)
+        }
+    }
+
+    protected fun addFloorFunction() {
+        addFunction("floor", "v") { args ->
+            args["v"].eval()!!.setScale(0, RoundingMode.FLOOR)
+        }
+    }
+
+    protected fun addAverageFunction() {
+        addFunction("average", "...v") { args ->
+            args["v"].rest.eval().run {
+                reduce { sum, decimal -> sum.add(decimal) } / size.toBigDecimal()
+            }
+        }
+    }
+
+    protected fun addSumFunction() {
+        addFunction("sum", "...v") { args ->
+            args["v"].rest.eval().reduce { sum, decimal -> sum.add(decimal) }
+        }
+    }
+
+    protected fun addAbsFunction() {
+        addFunction("abs", "v") { args ->
+            args["v"].eval()!!.abs()
+        }
     }
 }
 

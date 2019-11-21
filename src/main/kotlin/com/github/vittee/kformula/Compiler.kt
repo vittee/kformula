@@ -213,12 +213,16 @@ class Compiler(private val table: SymbolTable<Symbol>) {
         val hasVariadic = symbol.params.last() is FunctionVariadicParameterSymbol
         val count = symbol.params.count + (if (hasVariadic) -1 else 0)
 
-        if (args.size < count) {
+        if (args.size < count && count > 0) {
             throw CompileError("At least $count arguments are required, got ${args.size}, argument named \"${symbol.params[args.size]!!.name}\" is missing")
         }
 
         if (!hasVariadic && args.size > count) {
-            throw CompileError("Too many arguments")
+            when  {
+                count > 0 -> "Too many arguments, only $count are required, but got ${args.size}"
+                else -> "Too many arguments, none are required, but got ${args.size}"
+            }.let{ throw CompileError(it) }
+
         }
 
         return FunctionExpr(symbol).apply {

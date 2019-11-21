@@ -214,8 +214,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
         val count = symbol.params.count + (if (hasVariadic) -1 else 0)
 
         if (args.size < count) {
-            // TODO: More specific error message
-            throw CompileError("More arguments expected")
+            throw CompileError("At least $count arguments are required, got ${args.size}, argument named \"${symbol.params[args.size]!!.name}\" is missing")
         }
 
         if (!hasVariadic && args.size > count) {

@@ -31,7 +31,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
             val tt = tokenizer.testDeleteAny(EQUAL, EQUAL_EQUAL, NOT_EQ, EX_EQ, LESS, LESS_EQ, GREATER, GREATER_EQ, IN)
             left = when (tt) {
                 NONE -> break@loop
-                IN -> readInExpr(left)
+                IN -> readInBetweenExpr(left)
                 else -> {
                     val right = readExprAdd()
 
@@ -149,7 +149,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
         return IfThenElseValueExpr(cond, trueExpr, falseExpr)
     }
 
-    private fun readInExpr(left: Expr): Expr {
+    private fun readInBetweenExpr(left: Expr): InBetweenExpr {
         val hasParenthesis = tokenizer.testDelete(B_LEFT)
 
         val begin = readExpr()
@@ -160,7 +160,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
 
         val end = if (hasParenthesis) readBracket() else readExpr()
 
-        return InExpr(left, begin, end)
+        return InBetweenExpr(left, begin, end)
     }
 
     private fun readNotInExpr(left: Expr): Expr {
@@ -168,7 +168,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
             throw CompileError("IN expected")
         }
 
-        return NotInExpr(readInExpr(left))
+        return NotInBetweenExpr(readInBetweenExpr(left))
     }
 
     private fun readBracket(): Expr {

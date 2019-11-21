@@ -21,7 +21,7 @@ abstract class DataSymbol(name: String) : Symbol(name) {
     abstract val value: BigDecimal
 }
 
-class ConstDataSymbol(name: String, override val value: BigDecimal) : DataSymbol(name) {
+class DataValueSymbol(name: String, override val value: BigDecimal) : DataSymbol(name) {
     constructor(name: String, value: Int) : this(name, value.toBigDecimal()) {
 
     }

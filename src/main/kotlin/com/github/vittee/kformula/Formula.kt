@@ -30,7 +30,7 @@ abstract class BaseFormula {
         this += DataValueSymbol(name, value)
     }
 
-    fun addExternalVariable(name: String, resolver: ExternalValueResolve) {
+    fun addExternalVariable(name: String, resolver: ExternalValueResolver) {
         this += ExternalValueSymbol(name, resolver)
     }
 

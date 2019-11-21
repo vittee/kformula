@@ -57,7 +57,9 @@ fun FunctionArgumentSymbol?.isVariadic() = this?.param is FunctionVariadicParame
 
 fun FunctionArgumentSymbol?.asVariadic() = this?.expr as? FunctionVariadicArgumentExpr
 
-fun FunctionArgumentSymbol?.rest() = (this?.expr as? FunctionVariadicArgumentExpr)?.elements
+val FunctionArgumentSymbol?.rest
+    get() = (this?.expr as? FunctionVariadicArgumentExpr)?.elements
+
 
 fun FunctionArgumentSymbol?.eval() = this?.expr?.eval()
 

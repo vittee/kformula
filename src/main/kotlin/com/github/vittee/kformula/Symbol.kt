@@ -10,28 +10,34 @@ sealed class Symbol(name: String) {
     override fun hashCode() = System.identityHashCode(this)
 }
 
-abstract class DataSymbol(name: String) : Symbol(name) {
+abstract class ValueSymbol(name: String) : Symbol(name) {
+    abstract val value: BigDecimal
+}
+
+abstract class DataSymbol(name: String) : ValueSymbol(name) {
     init {
         when (name.first()) {
             '$', '%' -> {}
             else -> throw RuntimeException("Symbol name must begin with $ or %")
         }
     }
+}
 
-    abstract val value: BigDecimal
+class ConstValueSymbol(name: String, override val value: BigDecimal) : ValueSymbol(name) {
+    constructor(name: String, value: Int) : this(name, value.toBigDecimal())
+
+    constructor(name: String, value: Double) : this(name, value.toBigDecimal())
 }
 
 class DataValueSymbol(name: String, override val value: BigDecimal) : DataSymbol(name) {
-    constructor(name: String, value: Int) : this(name, value.toBigDecimal()) {
+    constructor(name: String, value: Int) : this(name, value.toBigDecimal())
 
-    }
-
-    constructor(name: String, value: Double) : this(name, value.toBigDecimal()) {
-
-    }
+    constructor(name: String, value: Double) : this(name, value.toBigDecimal())
 }
 
-class ExternalDataSymbol(name: String, private val resolver: (String) -> BigDecimal) : DataSymbol(name) {
+typealias ExternalValueResolve = (String) -> BigDecimal
+
+class ExternalValueSymbol(name: String, private val resolver: ExternalValueResolve) : ValueSymbol(name) {
     override val value: BigDecimal
         get() = resolver(name)
 }
@@ -64,7 +70,7 @@ fun List<Expr>?.eval() = this?.map(Expr::eval) ?: emptyList()
 
 fun FunctionArgumentSymbol?.eval() = this?.expr?.eval()
 
-class FunctionSymbol(name: String, vararg signatures: String, val handler: FunctionCallHandler) : Symbol(name) {
+class FunctionSymbol(name: String, signatures: Array<out String>, val handler: FunctionCallHandler) : Symbol(name) {
     val params = SymbolTable<FunctionParameterSymbol>()
 
     init {
@@ -93,7 +99,7 @@ class FunctionSymbol(name: String, vararg signatures: String, val handler: Funct
 }
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
-class SymbolTable<S : Symbol> {
+open class SymbolTable<S : Symbol> {
     private val container = mutableMapOf<String, S>()
 
     private val names = mutableListOf<String>()

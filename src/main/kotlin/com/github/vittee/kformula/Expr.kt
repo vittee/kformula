@@ -113,7 +113,7 @@ internal abstract class SymbolExpr<S : Symbol>(val symbol: S) : Expr() {
 
 }
 
-internal class DataSymbolExpr(symbol: DataSymbol) : SymbolExpr<DataSymbol>(symbol) {
+internal class ValueSymbolExpr(symbol: ValueSymbol) : SymbolExpr<ValueSymbol>(symbol) {
     override fun eval() = symbol.value
 }
 

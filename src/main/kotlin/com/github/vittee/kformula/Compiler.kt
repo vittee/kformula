@@ -186,11 +186,13 @@ class Compiler(private val table: SymbolTable<Symbol>) {
         }
 
         val name = tokenizer.token!!.text
-        val symbol = table.find<FunctionSymbol>(name) ?: throw CompileError("Function $name not found")
+        val symbol = table.find<Symbol>(name) ?: throw CompileError("Symbol $name is not defined")
 
-        tokenizer.killToken()
-
-        return readFunc(symbol)
+        return when (symbol) {
+            is ConstValueSymbol -> readConstant()
+            is FunctionSymbol -> readFunc(symbol)
+            else -> throw CompileError("Symbol of type ${symbol.javaClass.name} could not be used")
+        }
     }
 
     private fun readFunc(symbol: FunctionSymbol): FunctionExpr {
@@ -250,7 +252,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
         }
     }
 
-    private fun readVariable(): DataSymbolExpr {
+    private fun readVariable(): ValueSymbolExpr {
         if (!tokenizer.testVariable()) {
             throw CompileError("Variable expected")
         }
@@ -264,7 +266,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
             throw CompileError("Variable $name could not be called")
         }
 
-        return DataSymbolExpr(symbol)
+        return ValueSymbolExpr(symbol)
     }
 
     private fun readImmediate(): NumberExpr {

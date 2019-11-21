@@ -60,6 +60,7 @@ fun FunctionArgumentSymbol?.asVariadic() = this?.expr as? FunctionVariadicArgume
 val FunctionArgumentSymbol?.rest
     get() = (this?.expr as? FunctionVariadicArgumentExpr)?.elements
 
+fun List<Expr>?.eval() = this?.map(Expr::eval) ?: emptyList()
 
 fun FunctionArgumentSymbol?.eval() = this?.expr?.eval()
 

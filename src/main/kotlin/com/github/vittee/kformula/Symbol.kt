@@ -71,12 +71,10 @@ class FunctionSymbol(name: String, vararg signatures: String, val handler: Funct
         signatures.forEach { name ->
             val symbol = when {
                 name.startsWith("...") -> {
-                    // TODO: Remove prefix
-                    FunctionVariadicParameterSymbol(name)
+                    FunctionVariadicParameterSymbol(name.drop(3))
                 }
                 name.startsWith("~") -> {
-                    // TODO: Remove prefix
-                    FunctionLazyParameterSymbol(name)
+                    FunctionLazyParameterSymbol(name.drop(1))
                 }
                 else -> FunctionParameterSymbol(name)
             }

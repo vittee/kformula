@@ -55,10 +55,10 @@ class Compiler(private val table: SymbolTable<Symbol>) {
         var left = readExprMulti()
 
         loop@ do {
-            val tt = tokenizer.testDeleteAny(PLUS, MINUS, OR, NOT)
+            val tt = tokenizer.testDeleteAny(PLUS, MINUS, OR, NOT, EXCLAMATION)
             left = when (tt) {
                 NONE -> break@loop
-                NOT -> readNotInExpr(left)
+                NOT, EXCLAMATION -> readNotInExpr(left)
                 else -> {
                     val right = readExprMulti()
                     when (tt) {

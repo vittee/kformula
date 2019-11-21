@@ -136,6 +136,31 @@ class Compiler(private val table: SymbolTable<Symbol>) {
     private fun readNotTerm() = LogicalNotExpr(readTerm())
 
     private fun readIfExpr(): Expr {
+        if (!tokenizer.testDelete(B_LEFT)) {
+
+            return readIfThenElse()
+        }
+
+        val cond = readExpr()
+        if (!tokenizer.testDelete(COMMA)) {
+            throw CompileError("Comma expected")
+        }
+
+        val trueExpr = readExpr()
+
+        val falseExpr = when {
+            tokenizer.testDelete(COMMA) -> readExpr()
+            else -> NumberExpr(BigDecimal.ZERO)
+        }
+
+        if (!tokenizer.testDelete(B_RIGHT)) {
+            throw CompileError(") expected")
+        }
+
+        return IfThenElseValueExpr(cond, trueExpr, falseExpr)
+    }
+
+    private fun readIfThenElse(): Expr {
         val cond = readExpr()
 
         tokenizer.testDelete(THEN)

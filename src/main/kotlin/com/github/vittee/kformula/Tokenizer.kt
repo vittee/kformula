@@ -46,10 +46,13 @@ internal class Tokenizer(private val source: String) {
         }
         ?: NONE
 
-    fun testNumber() = ensureToken()?.let { t -> t.text.isNotEmpty() && (t.type == NUMBER) } ?: false
     fun test(type: TokenType) = ensureToken()?.let { tok -> (tok.type == type) } ?: false
 
-    fun testName() = ensureToken()?.let { t -> t.text.isNotEmpty() && (t.type == NAME || t.type == VARIABLE) } ?: false
+    fun testNumber() = test(NUMBER)
+
+    fun testName() = test(NAME)
+
+    fun testVariable() = test(VARIABLE)
 
     fun killToken() {
         token = null

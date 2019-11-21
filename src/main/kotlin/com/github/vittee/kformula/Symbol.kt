@@ -37,7 +37,7 @@ class DataValueSymbol(name: String, override val value: BigDecimal) : DataSymbol
 
 typealias ExternalValueResolve = (String) -> BigDecimal
 
-class ExternalValueSymbol(name: String, private val resolver: ExternalValueResolve) : ValueSymbol(name) {
+class ExternalValueSymbol(name: String, private val resolver: ExternalValueResolve) : DataSymbol(name) {
     override val value: BigDecimal
         get() = resolver(name)
 }

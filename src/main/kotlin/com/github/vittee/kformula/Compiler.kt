@@ -196,6 +196,8 @@ class Compiler(private val table: SymbolTable<Symbol>) {
     }
 
     private fun readFunc(symbol: FunctionSymbol): FunctionExpr {
+        tokenizer.killToken()
+
         if (!tokenizer.testDelete(B_LEFT)) {
             throw CompileError("( expected")
         }
@@ -250,6 +252,23 @@ class Compiler(private val table: SymbolTable<Symbol>) {
 
             prepare()
         }
+    }
+
+    private fun readConstant(): ValueSymbolExpr {
+        if (!tokenizer.testName()) {
+            throw CompileError("Constant name expected")
+        }
+
+        val name = tokenizer.token!!.text
+        val symbol = table.find<ConstValueSymbol>(name) ?: throw CompileError("Constant $name does not exist")
+
+        tokenizer.killToken()
+
+        if (tokenizer.test(B_LEFT)) {
+            throw CompileError("Constant $name could not be called")
+        }
+
+        return ValueSymbolExpr(symbol)
     }
 
     private fun readVariable(): ValueSymbolExpr {

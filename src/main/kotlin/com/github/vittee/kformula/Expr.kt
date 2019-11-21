@@ -107,6 +107,14 @@ internal class NotInExpr(val right: Expr): Expr() {
     override fun eval(): BigDecimal = right.eval().toBool().not().toBigDecimal()
 }
 
+internal abstract class SymbolExpr<S : Symbol>(val symbol: S) : Expr() {
+
+}
+
+internal class DataSymbolExpr(symbol: DataSymbol) : SymbolExpr<DataSymbol>(symbol) {
+    override fun eval() = symbol.value
+}
+
 private fun Boolean.toBigDecimal() = if (this) BigDecimal.ONE else BigDecimal.ZERO
 
 private fun BigDecimal.toBool() = this != BigDecimal.ZERO

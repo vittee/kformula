@@ -7,7 +7,7 @@ open class CompileError(s: String) : RuntimeException("Parse Error: $s")
 class NoMoreExpressionError : CompileError("End of expression expected")
 class NeverError : CompileError("Should not happen")
 
-class Compiler {
+class Compiler(private val table: SymbolTable<Symbol>) {
     private var tokenizer = Tokenizer("")
 
     fun compile(source: String): Expr {
@@ -126,6 +126,7 @@ class Compiler {
         }
         else -> when {
             tokenizer.testName() -> readName()
+            tokenizer.testVariable() -> readVariable()
             else -> readImmediate()
         }
     }
@@ -185,6 +186,23 @@ class Compiler {
         }
 
         TODO("Name lookup")
+    }
+
+    private fun readVariable(): Expr {
+        if (!tokenizer.testVariable()) {
+            throw CompileError("Variable expected")
+        }
+
+        val name = tokenizer.token!!.text
+        val symbol = table.find<DataSymbol>(name) ?: throw CompileError("Variable $name does not exist")
+
+        tokenizer.killToken()
+
+        if (tokenizer.test(B_LEFT)) {
+            throw CompileError("Variable $name could not be called")
+        }
+
+        return DataSymbolExpr(symbol)
     }
 
     private fun readImmediate(): Expr {

@@ -28,7 +28,7 @@ class Compiler {
     private fun readExpr(): Expr {
         var left = readExprAdd()
         loop@ do {
-            val tt = tokenizer.testDeleteAny(setOf(EQUAL, EQUAL_EQUAL, NOT_EQ, EX_EQ, LESS, LESS_EQ, GREATER, GREATER_EQ, IN))
+            val tt = tokenizer.testDeleteAny(EQUAL, EQUAL_EQUAL, NOT_EQ, EX_EQ, LESS, LESS_EQ, GREATER, GREATER_EQ, IN)
             left = when (tt) {
                 NONE -> break@loop
                 IN -> readInExpr(left)
@@ -55,7 +55,7 @@ class Compiler {
         var left = readExprMulti()
 
         loop@ do {
-            val tt = tokenizer.testDeleteAny(setOf(PLUS, MINUS, OR, NOT))
+            val tt = tokenizer.testDeleteAny(PLUS, MINUS, OR, NOT)
             left = when (tt) {
                 NONE -> break@loop
                 NOT -> readNotInExpr(left)
@@ -77,7 +77,7 @@ class Compiler {
     private fun readExprMulti(): Expr {
         var left = readTerm()
         do {
-            val tt = tokenizer.testDeleteAny(setOf(TIMES, DIVIDE, MOD, AND, EXPONENT))
+            val tt = tokenizer.testDeleteAny(TIMES, DIVIDE, MOD, AND, EXPONENT)
             if (tt == NONE) break
 
             val right = readTerm()
@@ -95,7 +95,7 @@ class Compiler {
         return left
     }
 
-    private fun readTerm(): Expr = when (tokenizer.testAny(setOf(PLUS, MINUS, NOT, EXCLAMATION, TRUE, FALSE, B_LEFT, IF))) {
+    private fun readTerm(): Expr = when (tokenizer.testAny(PLUS, MINUS, NOT, EXCLAMATION, TRUE, FALSE, B_LEFT, IF)) {
         PLUS -> {
             tokenizer.killToken()
             readTerm()
@@ -153,7 +153,7 @@ class Compiler {
 
         val begin = readExpr()
 
-        if (tokenizer.testDeleteAny(setOf(BETWEEN, DOT_DOT)) == NONE) {
+        if (tokenizer.testDeleteAny(BETWEEN, DOT_DOT) == NONE) {
             throw CompileError("BETWEEN/.. expected")
         }
 

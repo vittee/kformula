@@ -16,14 +16,14 @@ internal class Tokenizer(private val source: String) {
 
     private val tokenBuffer = StringBuilder()
 
-    fun available() = source.length - pos;
+    fun available() = source.length - pos
 
     private fun readToken() {
         killToken()
         consumeToken()
     }
 
-    fun testAny(types: Set<TokenType>) = ensureToken()?.let {
+    fun testAny(vararg types: TokenType) = ensureToken()?.let {
         when {
             types.contains(it.type) -> it.type
             else -> NONE
@@ -38,7 +38,7 @@ internal class Tokenizer(private val source: String) {
         }
         ?: false
 
-    fun testDeleteAny(types: Set<TokenType>) = ensureToken()
+    fun testDeleteAny(vararg types: TokenType) = ensureToken()
         ?.takeIf { types.contains(it.type) }
         ?.let {
             killToken()
@@ -115,13 +115,13 @@ internal class Tokenizer(private val source: String) {
             in '0'..'9' -> {
                 tokenBuffer.append(c)
                 number()
-                token = Token(tokenBuffer.toString(), TokenType.NUMBER, tokenBuffer.toString().toBigDecimal())
+                token = Token(tokenBuffer.toString(), NUMBER, tokenBuffer.toString().toBigDecimal())
                 return
             }
             '$','%' -> {
                 tokenBuffer.append(c)
                 variable()
-                token = Token(tokenBuffer.toString(), TokenType.VARIABLE)
+                token = Token(tokenBuffer.toString(), VARIABLE)
                 return
             }
             '_',
@@ -131,7 +131,7 @@ internal class Tokenizer(private val source: String) {
                 name()
 
                 val type = when (val tt = currentTokenType()) {
-                    NONE -> TokenType.NAME
+                    NONE -> NAME
                     else -> tt
                 }
                 token = Token(tokenBuffer.toString(), type)
@@ -186,40 +186,40 @@ internal class Tokenizer(private val source: String) {
 
     private fun currentTokenType(): TokenType {
         if (tokenBuffer.isEmpty()) {
-            return TokenType.NAME
+            return NAME
         }
 
         return when (tokenBuffer.toString().toLowerCase()) {
-            "+" -> TokenType.PLUS
-            "-" -> TokenType.MINUS
-            "*" -> TokenType.TIMES
-            "/" -> TokenType.DIVIDE
-            "^" -> TokenType.EXPONENT
-            "(" -> TokenType.B_LEFT
-            ")" -> TokenType.B_RIGHT
-            "," -> TokenType.COMMA
-            "!" -> TokenType.EXCLAMATION
-            "!=" -> TokenType.EX_EQ
-            ">" -> TokenType.GREATER
-            ">=" -> TokenType.GREATER_EQ
-            "=" -> TokenType.EQUAL
-            "==" -> TokenType.EQUAL_EQUAL
-            "<" -> TokenType.LESS
-            "<=" -> TokenType.LESS_EQ
-            "<>" -> TokenType.NOT_EQ
-            ".." -> TokenType.DOT_DOT
-            "mod" -> TokenType.MOD
-            "and" -> TokenType.AND
-            "or" -> TokenType.OR
-            "not" -> TokenType.NOT
-            "true" -> TokenType.TRUE
-            "false" -> TokenType.FALSE
-            "if" -> TokenType.IF
-            "then" -> TokenType.THEN
-            "else" -> TokenType.ELSE
-            "in" -> TokenType.IN
-            "between" -> TokenType.BETWEEN
-            else -> TokenType.NONE
+            "+" -> PLUS
+            "-" -> MINUS
+            "*" -> TIMES
+            "/" -> DIVIDE
+            "^" -> EXPONENT
+            "(" -> B_LEFT
+            ")" -> B_RIGHT
+            "," -> COMMA
+            "!" -> EXCLAMATION
+            "!=" -> EX_EQ
+            ">" -> GREATER
+            ">=" -> GREATER_EQ
+            "=" -> EQUAL
+            "==" -> EQUAL_EQUAL
+            "<" -> LESS
+            "<=" -> LESS_EQ
+            "<>" -> NOT_EQ
+            ".." -> DOT_DOT
+            "mod" -> MOD
+            "and" -> AND
+            "or" -> OR
+            "not" -> NOT
+            "true" -> TRUE
+            "false" -> FALSE
+            "if" -> IF
+            "then" -> THEN
+            "else" -> ELSE
+            "in" -> IN
+            "between" -> BETWEEN
+            else -> NONE
         }
     }
 

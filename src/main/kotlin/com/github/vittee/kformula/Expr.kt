@@ -8,13 +8,9 @@ import kotlin.math.pow
 sealed class Expr {
     abstract fun eval(): BigDecimal
 
-    override fun equals(other: Any?): Boolean {
-        return this === other
-    }
+    override fun equals(other: Any?) = this === other
 
-    override fun hashCode(): Int {
-        return System.identityHashCode(this)
-    }
+    override fun hashCode() = System.identityHashCode(this)
 }
 
 internal class NumberExpr(private val value: BigDecimal) : Expr() {

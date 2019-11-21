@@ -165,7 +165,7 @@ private fun Boolean.toBigDecimal() = if (this) BigDecimal.ONE else BigDecimal.ZE
 
 private fun BigDecimal.toBool() = this != BigDecimal.ZERO
 
-private infix fun BigDecimal.pow(n: BigDecimal): BigDecimal {
+infix fun BigDecimal.pow(n: BigDecimal): BigDecimal {
     var right = n
     val signOfRight = right.signum()
 

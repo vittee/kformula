@@ -115,6 +115,50 @@ internal class DataSymbolExpr(symbol: DataSymbol) : SymbolExpr<DataSymbol>(symbo
     override fun eval() = symbol.value
 }
 
+abstract class FunctionArgumentBaseExpr(val param: FunctionParameterSymbol) : Expr()
+
+@Suppress("MemberVisibilityCanBePrivate")
+class FunctionLazyArgumentExpr(param: FunctionParameterSymbol, val expr: Expr) : FunctionArgumentBaseExpr(param) {
+    override fun eval() = expr.eval()
+}
+
+@Suppress("MemberVisibilityCanBePrivate")
+open class FunctionArgumentExpr(param: FunctionParameterSymbol, val value: BigDecimal) : FunctionArgumentBaseExpr(param) {
+    override fun eval() = value
+}
+
+class FunctionVariadicArgumentExpr(param: FunctionParameterSymbol, val elements: List<Expr>) : FunctionArgumentBaseExpr(param) {
+    override fun eval(): BigDecimal = BigDecimal.ZERO
+}
+
+class FunctionArgumentZeroExpr(param: FunctionParameterSymbol) : FunctionArgumentExpr(param, BigDecimal.ZERO)
+
+internal class FunctionExpr(symbol: FunctionSymbol) : SymbolExpr<FunctionSymbol>(symbol) {
+    private val args = mutableListOf<FunctionArgumentBaseExpr>()
+
+    val arguments = FunctionArgumentTable()
+
+    override fun eval(): BigDecimal {
+        for (i in 0 until symbol.params.count) {
+            arguments[i]!!.expr = args[i]
+        }
+
+        return symbol.handler(arguments)
+    }
+
+    fun addArgument(arg: FunctionArgumentBaseExpr) {
+        args += arg
+    }
+
+    fun prepare() {
+        arguments.clear()
+        for (i in 0 until symbol.params.count) {
+            val p = symbol.params[i]!!
+            arguments += FunctionArgumentSymbol(p, FunctionArgumentZeroExpr(p))
+        }
+    }
+}
+
 private fun Boolean.toBigDecimal() = if (this) BigDecimal.ONE else BigDecimal.ZERO
 
 private fun BigDecimal.toBool() = this != BigDecimal.ZERO

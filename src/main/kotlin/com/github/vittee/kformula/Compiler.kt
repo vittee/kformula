@@ -174,7 +174,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
     private fun readBracket(): Expr {
         val e = readExpr()
         if (!tokenizer.testDelete(B_RIGHT)) {
-            throw CompileError(""") expected""")
+            throw CompileError(") expected")
         }
 
         return e
@@ -185,7 +185,66 @@ class Compiler(private val table: SymbolTable<Symbol>) {
             throw CompileError("Name expected")
         }
 
-        TODO("Name lookup")
+        val name = tokenizer.token!!.text
+        val symbol = table.find<FunctionSymbol>(name) ?: throw CompileError("Function $name not found")
+
+        tokenizer.killToken()
+
+        return readFunc(symbol)
+    }
+
+    private fun readFunc(symbol: FunctionSymbol): Expr {
+        if (!tokenizer.testDelete(B_LEFT)) {
+            throw CompileError("( expected")
+        }
+
+        val args = mutableListOf<Expr>()
+
+        if (!tokenizer.testDelete(B_RIGHT)) {
+            do {
+                args += readExpr()
+            } while (tokenizer.testDelete(COMMA) && tokenizer.hasTokens())
+
+            if (!tokenizer.testDelete(B_RIGHT)) {
+                throw CompileError(") expected")
+            }
+        }
+
+        val hasVariadic = symbol.params.last() is FunctionVariadicParameterSymbol
+        val count = symbol.params.count + (if (hasVariadic) -1 else 0)
+
+        if (args.size < count) {
+            // TODO: More specific error message
+            throw CompileError("More arguments expected")
+        }
+
+        if (!hasVariadic && args.size > count) {
+            throw CompileError("Too many arguments")
+        }
+
+        return FunctionExpr(symbol).apply {
+            val static = when {
+                hasVariadic -> args.subList(0, count)
+                else -> args
+            }
+
+            static.forEachIndexed { index, expr ->
+                when (val param = symbol.params[index]) {
+                    is FunctionLazyParameterSymbol -> FunctionLazyArgumentExpr(param, expr)
+                    is FunctionParameterSymbol -> FunctionArgumentExpr(param, expr.eval())
+                    else -> throw RuntimeException("Unsupported function parameter")
+                }.let(::addArgument)
+            }
+
+            if (hasVariadic) {
+                FunctionVariadicArgumentExpr(
+                    symbol.params.last() as FunctionParameterSymbol,
+                    args.slice(count until args.size)
+                ).let(::addArgument)
+            }
+
+            prepare()
+        }
     }
 
     private fun readVariable(): Expr {

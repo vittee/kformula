@@ -111,7 +111,7 @@ open class SymbolTable<S : Symbol> {
 
     fun has(symbol: S) = container.containsValue(symbol)
 
-    operator fun get(name: String) = container[name.toLowerCase()]
+    operator fun get(name: String): S = container[name.toLowerCase()] ?: throw RuntimeException("Symbol $name does not exist")
 
     operator fun get(i: Int) = this[names[i]]
 

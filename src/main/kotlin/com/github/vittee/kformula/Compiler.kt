@@ -7,7 +7,7 @@ open class CompileError(s: String) : RuntimeException("Parse Error: $s")
 class NoMoreExpressionError : CompileError("End of expression expected")
 class NeverError : CompileError("Should not happen")
 
-class Compiler(private val table: SymbolTable<Symbol>) {
+class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
     private var tokenizer = Tokenizer("")
 
     fun compile(source: String): Expr {

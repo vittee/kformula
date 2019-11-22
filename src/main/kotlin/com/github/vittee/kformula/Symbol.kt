@@ -60,7 +60,72 @@ class FunctionArgumentSymbol(val param: FunctionParameterSymbol, var expr: Funct
 
     val rest
         get() = (expr as? FunctionVariadicArgumentExpr)?.elements ?: throw RuntimeException("Argument is not variadic")
+
+    operator fun unaryMinus() = -eval()
+    operator fun unaryPlus() = eval()
+    operator fun not(): BigDecimal = if (eval() == BigDecimal.ZERO) BigDecimal.ONE else BigDecimal.ZERO
+    operator fun plus(other: FunctionArgumentSymbol) = eval() + other.eval()
+    operator fun minus(other: FunctionArgumentSymbol) = eval() - other.eval()
+    operator fun times(other: FunctionArgumentSymbol) = eval() * other.eval()
+    operator fun div(other: FunctionArgumentSymbol) = eval() / other.eval()
+    operator fun rem(other: FunctionArgumentSymbol) = eval() % other.eval()
+
+    operator fun plus(other: Int) = eval() + other.toBigDecimal()
+    operator fun minus(other: Int) = eval() - other.toBigDecimal()
+    operator fun times(other: Int) = eval() * other.toBigDecimal()
+    operator fun div(other: Int) = eval() / other.toBigDecimal()
+    operator fun rem(other: Int) = eval() % other.toBigDecimal()
+
+    operator fun plus(other: Double) = eval() + other.toBigDecimal()
+    operator fun minus(other: Double) = eval() - other.toBigDecimal()
+    operator fun times(other: Double) = eval() * other.toBigDecimal()
+    operator fun div(other: Double) = eval() / other.toBigDecimal()
+    operator fun rem(other: Double) = eval() % other.toBigDecimal()
+
+    operator fun plus(other: BigDecimal) = eval() + other
+    operator fun minus(other: BigDecimal) = eval() - other
+    operator fun times(other: BigDecimal) = eval() * other
+    operator fun div(other: BigDecimal) = eval() / other
+    operator fun rem(other: BigDecimal) = eval() % other
+
+    operator fun compareTo(other: FunctionArgumentSymbol) = eval().compareTo(other.eval())
+    operator fun compareTo(other: Int) = eval().compareTo(other.toBigDecimal())
+    operator fun compareTo(other: Double) = eval().compareTo(other.toBigDecimal())
+    operator fun compareTo(other: BigDecimal) = eval().compareTo(other)
 }
+
+operator fun Int.plus(other: FunctionArgumentSymbol) = this.toBigDecimal() + other.eval()
+operator fun Int.minus(other: FunctionArgumentSymbol) = this.toBigDecimal() - other.eval()
+operator fun Int.times(other: FunctionArgumentSymbol) = this.toBigDecimal() * other.eval()
+operator fun Int.div(other: FunctionArgumentSymbol) = this.toBigDecimal() / other.eval()
+operator fun Int.rem(other: FunctionArgumentSymbol) = this.toBigDecimal() % other.eval()
+operator fun Int.compareTo(other: FunctionArgumentSymbol) = this.toBigDecimal().compareTo(other.eval())
+
+operator fun Double.plus(other: FunctionArgumentSymbol) = this.toBigDecimal() + other.eval()
+operator fun Double.minus(other: FunctionArgumentSymbol) = this.toBigDecimal() - other.eval()
+operator fun Double.times(other: FunctionArgumentSymbol) = this.toBigDecimal() * other.eval()
+operator fun Double.div(other: FunctionArgumentSymbol) = this.toBigDecimal() / other.eval()
+operator fun Double.rem(other: FunctionArgumentSymbol) = this.toBigDecimal() % other.eval()
+operator fun Double.compareTo(other: FunctionArgumentSymbol) = this.toBigDecimal().compareTo(other.eval())
+
+operator fun BigDecimal.plus(other: FunctionArgumentSymbol) = this + other.eval()
+operator fun BigDecimal.minus(other: FunctionArgumentSymbol) = this - other.eval()
+operator fun BigDecimal.times(other: FunctionArgumentSymbol) = this * other.eval()
+operator fun BigDecimal.div(other: FunctionArgumentSymbol) = this / other.eval()
+operator fun BigDecimal.rem(other: FunctionArgumentSymbol) = this % other.eval()
+operator fun BigDecimal.compareTo(other: FunctionArgumentSymbol) = this.compareTo(other.eval())
+
+operator fun BigDecimal.plus(other: Int) = this + other.toBigDecimal()
+operator fun BigDecimal.minus(other: Int) = this - other.toBigDecimal()
+operator fun BigDecimal.times(other: Int) = this * other.toBigDecimal()
+operator fun BigDecimal.div(other: Int) = this / other.toBigDecimal()
+operator fun BigDecimal.rem(other: Int) = this % other.toBigDecimal()
+
+operator fun BigDecimal.plus(other: Double) = this + other.toBigDecimal()
+operator fun BigDecimal.minus(other: Double) = this - other.toBigDecimal()
+operator fun BigDecimal.times(other: Double) = this * other.toBigDecimal()
+operator fun BigDecimal.div(other: Double) = this / other.toBigDecimal()
+operator fun BigDecimal.rem(other: Double) = this % other.toBigDecimal()
 
 fun FunctionArgumentSymbol?.isVariadic() = this?.param is FunctionVariadicParameterSymbol
 

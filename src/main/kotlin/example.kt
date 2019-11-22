@@ -24,7 +24,7 @@ fun main() {
         }
 
         addFunction("add", "a", "b=1") { args ->
-            args["a"].eval() + args["b"].eval()
+            args["a"] + args["b"]
         }
     }
 

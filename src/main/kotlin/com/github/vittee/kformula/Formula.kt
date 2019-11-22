@@ -94,7 +94,7 @@ abstract class BaseFormula {
     protected fun addRoundToFunction() {
         addFunction("roundTo", "v", "scale") { args ->
             args["v"].eval().setScale(
-                args["scale"].eval()?.toInt() ?: 0,
+                args["scale"].eval().toInt(),
                 RoundingMode.HALF_EVEN
             )
         }

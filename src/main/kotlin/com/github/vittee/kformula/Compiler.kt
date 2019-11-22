@@ -243,7 +243,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
         val count = symbol.params.count + (if (hasVariadic) -1 else 0)
 
         if (args.size < count && count > 0) {
-            throw CompileError("At least $count arguments are required, got ${args.size}, argument named \"${symbol.params[args.size]!!.name}\" is missing")
+            throw CompileError("At least $count arguments are required, got ${args.size}, argument named \"${symbol.params[args.size].name}\" is missing")
         }
 
         if (!hasVariadic && args.size > count) {
@@ -263,8 +263,7 @@ class Compiler(private val table: SymbolTable<Symbol>) {
             static.forEachIndexed { index, expr ->
                 when (val param = symbol.params[index]) {
                     is FunctionLazyParameterSymbol -> FunctionLazyArgumentExpr(param, expr)
-                    is FunctionParameterSymbol -> FunctionArgumentExpr(param, expr.eval())
-                    else -> throw RuntimeException("Unsupported function parameter")
+                    else -> FunctionArgumentExpr(param, expr.eval())
                 }.let(::addArgument)
             }
 

@@ -135,6 +135,7 @@ class FunctionVariadicArgumentExpr(param: FunctionParameterSymbol, val elements:
 
 class FunctionArgumentZeroExpr(param: FunctionParameterSymbol) : FunctionArgumentExpr(param, BigDecimal.ZERO)
 
+@Suppress("MemberVisibilityCanBePrivate")
 internal class FunctionExpr(symbol: FunctionSymbol) : SymbolExpr<FunctionSymbol>(symbol) {
     private val args = mutableListOf<FunctionArgumentBaseExpr>()
 
@@ -142,7 +143,7 @@ internal class FunctionExpr(symbol: FunctionSymbol) : SymbolExpr<FunctionSymbol>
 
     override fun eval(): BigDecimal {
         for (i in 0 until symbol.params.count) {
-            arguments[i]!!.expr = args[i]
+            arguments[i].expr = args[i]
         }
 
         return symbol.handler(arguments)
@@ -155,7 +156,7 @@ internal class FunctionExpr(symbol: FunctionSymbol) : SymbolExpr<FunctionSymbol>
     fun prepare() {
         arguments.clear()
         for (i in 0 until symbol.params.count) {
-            val p = symbol.params[i]!!
+            val p = symbol.params[i]
             arguments += FunctionArgumentSymbol(p, FunctionArgumentZeroExpr(p))
         }
     }

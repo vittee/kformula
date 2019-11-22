@@ -56,19 +56,17 @@ typealias FunctionCallHandler = (args: FunctionArgumentTable) -> BigDecimal
 
 @Suppress("MemberVisibilityCanBePrivate")
 class FunctionArgumentSymbol(val param: FunctionParameterSymbol, var expr: FunctionArgumentBaseExpr) : Symbol(param.name) {
+    fun eval() = expr.eval()
 
+    val rest
+        get() = (expr as? FunctionVariadicArgumentExpr)?.elements ?: throw RuntimeException("Argument is not variadic")
 }
 
 fun FunctionArgumentSymbol?.isVariadic() = this?.param is FunctionVariadicParameterSymbol
 
 fun FunctionArgumentSymbol?.asVariadic() = this?.expr as? FunctionVariadicArgumentExpr
 
-val FunctionArgumentSymbol?.rest
-    get() = (this?.expr as? FunctionVariadicArgumentExpr)?.elements
-
-fun List<Expr>?.eval() = this?.map(Expr::eval) ?: emptyList()
-
-fun FunctionArgumentSymbol?.eval() = this?.expr?.eval()
+fun List<Expr>.eval(): List<BigDecimal> = map(Expr::eval)
 
 class FunctionSymbol(name: String, signatures: Array<out String>, val handler: FunctionCallHandler) : Symbol(name) {
     val params = SymbolTable<FunctionParameterSymbol>()

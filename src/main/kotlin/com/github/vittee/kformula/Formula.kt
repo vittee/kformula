@@ -66,15 +66,15 @@ abstract class BaseFormula {
 
     protected fun addSqrtFunction() {
         addFunction("sqrt", "v") { args ->
-            args["v"].eval()!! pow 0.5.toBigDecimal()
+            args["v"].eval() pow 0.5.toBigDecimal()
         }
     }
 
     protected fun addClampFunction() {
         addFunction("clamp", "v", "min", "max") { args ->
-            args["v"].eval()!!.coerceIn(
-                args["min"].eval()!!,
-                args["max"].eval()!!
+            args["v"].eval().coerceIn(
+                args["min"].eval(),
+                args["max"].eval()
             )
         }
     }
@@ -93,7 +93,7 @@ abstract class BaseFormula {
 
     protected fun addRoundToFunction() {
         addFunction("roundTo", "v", "scale") { args ->
-            args["v"].eval()!!.setScale(
+            args["v"].eval().setScale(
                 args["scale"].eval()?.toInt() ?: 0,
                 RoundingMode.HALF_EVEN
             )
@@ -102,19 +102,19 @@ abstract class BaseFormula {
 
     protected fun addRoundFunction() {
         addFunction("round", "v") { args ->
-            args["v"].eval()!!.setScale(0, RoundingMode.HALF_EVEN)
+            args["v"].eval().setScale(0, RoundingMode.HALF_EVEN)
         }
     }
 
     protected fun addCeilFunction() {
         addFunction("ceil", "v") { args ->
-            args["v"].eval()!!.setScale(0, RoundingMode.CEILING)
+            args["v"].eval().setScale(0, RoundingMode.CEILING)
         }
     }
 
     protected fun addFloorFunction() {
         addFunction("floor", "v") { args ->
-            args["v"].eval()!!.setScale(0, RoundingMode.FLOOR)
+            args["v"].eval().setScale(0, RoundingMode.FLOOR)
         }
     }
 
@@ -134,7 +134,7 @@ abstract class BaseFormula {
 
     protected fun addAbsFunction() {
         addFunction("abs", "v") { args ->
-            args["v"].eval()!!.abs()
+            args["v"].eval().abs()
         }
     }
 }

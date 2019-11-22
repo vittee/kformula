@@ -57,7 +57,6 @@ abstract class BaseFormula {
         addFloorFunction()
         addCeilFunction()
         addRoundFunction()
-        addRoundToFunction()
         addMinFunction()
         addMaxFunction()
         addClampFunction()
@@ -91,18 +90,12 @@ abstract class BaseFormula {
         }
     }
 
-    protected fun addRoundToFunction() {
-        addFunction("roundTo", "v", "scale") { args ->
+    protected fun addRoundFunction() {
+        addFunction("round", "v", "scale=0") { args ->
             args["v"].eval().setScale(
                 args["scale"].eval().toInt(),
                 RoundingMode.HALF_EVEN
             )
-        }
-    }
-
-    protected fun addRoundFunction() {
-        addFunction("round", "v") { args ->
-            args["v"].eval().setScale(0, RoundingMode.HALF_EVEN)
         }
     }
 

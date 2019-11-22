@@ -45,6 +45,17 @@ abstract class BaseFormula {
 
     fun compile(code: String) = Compiler(symbols).compile(code)
 
+    fun safeCompile(code: String): RootExpr? {
+        try {
+            return compile(code)
+        }
+        catch(e: Exception) {
+
+        }
+
+        return null
+    }
+
     protected fun addBuiltInConstants() {
         addConstant("PI", Math.PI)
         addConstant("E", Math.E)

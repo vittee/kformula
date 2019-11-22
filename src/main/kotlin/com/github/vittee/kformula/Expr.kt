@@ -13,6 +13,17 @@ sealed class Expr {
     override fun hashCode() = System.identityHashCode(this)
 }
 
+class RootExpr(private val child: Expr) : Expr() {
+    override fun eval() = child.eval()
+
+    fun safeEval(): BigDecimal = try {
+        eval()
+    }
+    catch (e: Exception) {
+        BigDecimal.ZERO
+    }
+}
+
 internal class NumberExpr(private val value: BigDecimal) : Expr() {
     override fun eval() = value
 }

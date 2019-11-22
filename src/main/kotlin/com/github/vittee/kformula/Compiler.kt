@@ -10,7 +10,7 @@ class NeverError : CompileError("Should not happen")
 class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
     private var tokenizer = Tokenizer("")
 
-    fun compile(source: String): Expr {
+    fun compile(source: String): RootExpr {
         tokenizer = Tokenizer(source)
         val e = readExpr()
 
@@ -22,7 +22,7 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
             throw NoMoreExpressionError()
         }
 
-        return e
+        return RootExpr(e)
     }
 
     private fun readExpr(): Expr {

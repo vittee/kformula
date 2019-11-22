@@ -242,6 +242,15 @@ class Compiler(private val table: SymbolTable<Symbol>) {
         val hasVariadic = symbol.params.last() is FunctionVariadicParameterSymbol
         val count = symbol.params.count + (if (hasVariadic) -1 else 0)
 
+        // fill default values
+        if (args.size < count) {
+            for (i in args.size until count) {
+                symbol.params[i].default?.let {
+                    args += NumberExpr(it)
+                }
+            }
+        }
+
         if (args.size < count && count > 0) {
             throw CompileError("At least $count arguments are required, got ${args.size}, argument named \"${symbol.params[args.size].name}\" is missing")
         }

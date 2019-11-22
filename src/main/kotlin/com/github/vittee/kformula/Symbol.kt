@@ -42,13 +42,13 @@ class ExternalValueSymbol(name: String, private val resolver: ExternalValueResol
         get() = resolver(name)
 }
 
-open class FunctionParameterSymbol(name: String) : Symbol(name) {
+open class FunctionParameterSymbol(name: String, val default: BigDecimal?) : Symbol(name) {
     fun isVariadic() = this is FunctionVariadicParameterSymbol
 }
 
-class FunctionLazyParameterSymbol(name: String) : FunctionParameterSymbol(name)
+class FunctionLazyParameterSymbol(name: String, default: BigDecimal?) : FunctionParameterSymbol(name, default)
 
-class FunctionVariadicParameterSymbol(name: String) : FunctionParameterSymbol(name)
+class FunctionVariadicParameterSymbol(name: String) : FunctionParameterSymbol(name, null)
 
 typealias FunctionArgumentTable = SymbolTable<FunctionArgumentSymbol>
 
@@ -72,20 +72,29 @@ class FunctionSymbol(name: String, signatures: Array<out String>, val handler: F
     val params = SymbolTable<FunctionParameterSymbol>()
 
     init {
-        signatures.forEach { s ->
-            val signature = parseSignature(s)
+        signatures.forEach { s -> parseSignature(s).let { signature ->
+            when {
+                signature.variadic -> FunctionVariadicParameterSymbol(signature.name)
+                signature.lazy -> FunctionLazyParameterSymbol(signature.name, signature.default)
+                else -> FunctionParameterSymbol(signature.name, signature.default)
+            }.let(::addParameter)
+        }}
 
-            val symbol = when {
-                signature.variadic -> {
-                    FunctionVariadicParameterSymbol(signature.name)
-                }
-                signature.lazy -> {
-                    FunctionLazyParameterSymbol(signature.name)
-                }
-                else -> FunctionParameterSymbol(signature.name)
+        // Variadic should be the last
+        for (i in 0 until params.count - 1 ) {
+            if (params[i] is FunctionVariadicParameterSymbol) {
+                throw RuntimeException("Variadic parameter must be in the last position")
             }
+        }
 
-            addParameter(symbol)
+        // Default must be tail
+        for (i in params.count - 2 downTo 0) {
+            val cur = params[i]
+            val next = params[i+1]
+
+            if (cur.default != null && next.default == null) {
+                throw RuntimeException("Parameter with default value must be tail")
+            }
         }
     }
 
@@ -95,7 +104,7 @@ class FunctionSymbol(name: String, signatures: Array<out String>, val handler: F
         START, NAME, DEFAULT
     }
     
-    private data class Signature(val name: String, val default: BigDecimal, val lazy: Boolean, val variadic: Boolean)
+    private data class Signature(val name: String, val default: BigDecimal?, val lazy: Boolean, val variadic: Boolean)
 
     private fun parseSignature(s: String): Signature {
         val len = s.length
@@ -169,7 +178,7 @@ class FunctionSymbol(name: String, signatures: Array<out String>, val handler: F
 
             }
 
-            BigDecimal.ZERO
+            null
         }
         return Signature(name.trim().toLowerCase(), defaultValue, lazy, variadic)
     }

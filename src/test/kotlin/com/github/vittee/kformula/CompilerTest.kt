@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertFails
 import kotlin.test.expect
 
-class CompilerTest {
+class CompilerTest : BaseTest() {
     private val compiler = Compiler(SymbolTable<Symbol>().apply {
         this += ConstValueSymbol("CONST1", 12345)
         this += DataValueSymbol("%fifty", 0.5)
@@ -29,21 +29,7 @@ class CompilerTest {
         }
     })
 
-    private fun compile(s: String) = compiler.compile(s)
-
-    private fun String.eval() = compile(this).eval()
-
-    private infix fun String.ee(x: BigDecimal) {
-        expect(x) { this.eval() }
-    }
-
-    private infix fun String.ee(x: Int) {
-        this ee x.toBigDecimal()
-    }
-
-    private infix fun String.ee(x: Double) {
-        this ee x.toBigDecimal()
-    }
+    override fun compile(s: String) = compiler.compile(s)
 
     @Test
     fun `Empty source should fail`() {
@@ -53,6 +39,7 @@ class CompilerTest {
     @Test
     fun `Literal expressions`() {
         compile("1")
+        "-0" ee 0
         "1" ee 1
         "1.234" ee 1.234
         "true" ee 1
@@ -292,5 +279,11 @@ class CompilerTest {
         "accumulate(20, one())" ee 21
         "accumulate(20, one()*2, 3, 5)" ee 30
         "accumulate(accumulate(20, -9, -8, -3), 9, 8, 7)" ee 24
+    }
+
+    @Test
+    fun `Safe eval`() {
+        assertFails { compile("1/0").eval() }
+        expect(BigDecimal.ZERO) { compile("1/0").safeEval() }
     }
 }

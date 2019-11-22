@@ -72,19 +72,106 @@ class FunctionSymbol(name: String, signatures: Array<out String>, val handler: F
     val params = SymbolTable<FunctionParameterSymbol>()
 
     init {
-        signatures.forEach { name ->
+        signatures.forEach { s ->
+            val signature = parseSignature(s)
+
             val symbol = when {
-                name.startsWith("...") -> {
-                    FunctionVariadicParameterSymbol(name.drop(3))
+                signature.variadic -> {
+                    FunctionVariadicParameterSymbol(signature.name)
                 }
-                name.startsWith("~") -> {
-                    FunctionLazyParameterSymbol(name.drop(1))
+                signature.lazy -> {
+                    FunctionLazyParameterSymbol(signature.name)
                 }
-                else -> FunctionParameterSymbol(name)
+                else -> FunctionParameterSymbol(signature.name)
             }
 
             addParameter(symbol)
         }
+    }
+
+    private class SignatureException(s: String) : RuntimeException(s)
+
+    private enum class SignatureState {
+        START, NAME, DEFAULT
+    }
+    
+    private data class Signature(val name: String, val default: BigDecimal, val lazy: Boolean, val variadic: Boolean)
+
+    private fun parseSignature(s: String): Signature {
+        val len = s.length
+        var pos = 0
+
+        var state = SignatureState.START
+
+        fun peek() = if (pos < len) s[pos] else Char.MIN_VALUE
+        fun advance() = if (pos < len) s[pos++] else Char.MIN_VALUE
+
+        fun beginName() { state = SignatureState.NAME }
+        fun beginDefault() { state = SignatureState.DEFAULT }
+
+        var lazy = false
+        var variadic = false
+        var name = ""
+        var default = ""
+
+        while (pos < len) {
+            while (peek() == ' ') {
+                advance()
+            }
+
+            when (state) {
+                SignatureState.START -> {
+                    when (peek()) {
+                        '.' -> {
+                            val dotdotdot = arrayOf(advance(), advance(), advance()).joinToString("")
+                            if (dotdotdot != "...") {
+                                throw SignatureException("Invalid signature")
+                            }
+
+                            variadic = true
+                            beginName()
+                        }
+                        '~' -> {
+                            advance()
+
+                            lazy = true
+                            beginName()
+                        }
+                        else -> beginName()
+                    }
+                }
+                SignatureState.NAME -> {
+                    when (peek()) {
+                        '=' -> {
+                            if (variadic) {
+                                throw SignatureException("Variadic parameter cannot has default value")
+                            }
+
+                            advance()
+                            beginDefault()
+                        }
+                        else -> {
+                            name += advance()
+                        }
+                    }
+                }
+                SignatureState.DEFAULT -> {
+                    default += advance()
+                }
+            }
+        }
+
+        val defaultValue = default.trim().let {
+            if (it.isNotEmpty()) try {
+                return@let it.toBigDecimal()
+            }
+            catch(e: Exception) {
+
+            }
+
+            BigDecimal.ZERO
+        }
+        return Signature(name.trim().toLowerCase(), defaultValue, lazy, variadic)
     }
 
     private fun addParameter(symbol: FunctionParameterSymbol) {

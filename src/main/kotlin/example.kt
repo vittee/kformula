@@ -3,7 +3,8 @@ import java.math.BigDecimal
 
 fun main() {
     val fx = Formula().apply {
-        addVariable("\$test", 55.555)
+        addVariable("\$test", 300.5)
+        addVariable("%discount", 0.5)
         addExternalVariable("\$ext") {
             99.99.toBigDecimal()
         }
@@ -28,7 +29,7 @@ fun main() {
         }
     }
 
-    val program = fx.compile("add(9)")
+    val program = fx.compile("subtract_percentage(\$test,%discount)")
 
     println(program.eval().toPlainString())
 }

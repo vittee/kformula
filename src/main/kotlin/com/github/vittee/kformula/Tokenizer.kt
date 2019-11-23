@@ -3,7 +3,7 @@ package com.github.vittee.kformula
 import com.github.vittee.kformula.TokenType.*
 import java.math.BigDecimal
 
-internal data class Token(val text: String, val type: TokenType, val literal: Any? = null)
+internal data class Token(val text: String, val type: TokenType, val literal: BigDecimal? = null)
 
 class ParseError(s: String) : RuntimeException(s)
 
@@ -187,7 +187,7 @@ internal class Tokenizer(private val source: String) {
             text.toBigDecimal().let { v ->
                 Token(text, NUMBER, when {
                     isPercentage -> v * hundredth
-                    else -> Token(text, NUMBER, v)
+                    else -> v
                 })
             }
         }

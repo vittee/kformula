@@ -4,7 +4,11 @@ import kotlin.test.Test
 import kotlin.test.assertFails
 
 class FormulaTest : BaseTest() {
-    private val fx = Formula()
+    private val fx = Formula().apply {
+        addVariable("\$price", 1690)
+        addVariable("\$discounted", 1014)
+        addVariable("%discount", 0.40)
+    }
 
     override fun compile(s: String) = fx.compile(s)
 
@@ -49,5 +53,17 @@ class FormulaTest : BaseTest() {
         "round(3.56)" ee 4
         "round(3.56,1)" ee 3.6
         "round(3.567,2)" ee 3.57
+    }
+
+    @Test
+    fun `Percentage calculation`() {
+        "\$price * %discount" ee 676
+        "\$price * -%discount" ee -676
+        "\$price - (\$price * %discount)" ee 1014
+        "\$price * (1-%discount)" ee 1014
+        "\$discounted / (1-%discount)" ee 1690
+        "add_percentage(\$price, +50%)" ee 2535
+        "add_percentage(\$price, -%discount)" ee 1014
+        "subtract_percentage(\$price, %discount)" ee 1014
     }
 }

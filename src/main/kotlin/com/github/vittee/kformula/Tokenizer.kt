@@ -121,13 +121,12 @@ internal class Tokenizer(private val source: String) {
             }
             in '0'..'9' -> {
                 tokenBuffer.append(c)
-                token = Token(tokenBuffer.toString(), NUMBER,  number())
+                number()
                 return
             }
             '$','%' -> {
                 tokenBuffer.append(c)
                 variable()
-                token = Token(tokenBuffer.toString(), VARIABLE)
                 return
             }
             '_',
@@ -135,12 +134,6 @@ internal class Tokenizer(private val source: String) {
             in 'A'..'Z' -> {
                 tokenBuffer.append(c)
                 name()
-
-                val type = when (val tt = currentTokenType()) {
-                    NONE -> NAME
-                    else -> tt
-                }
-                token = Token(tokenBuffer.toString(), type)
                 return
             }
             Char.MIN_VALUE -> {
@@ -154,8 +147,8 @@ internal class Tokenizer(private val source: String) {
         token = Token(tokenBuffer.toString(), currentTokenType())
     }
 
-    private fun number(): BigDecimal {
-        var scale: BigDecimal? = null
+    private fun number() {
+        var isPercentage = false
 
         loop@ while(available() > 0) {
             when (peek()) {
@@ -175,14 +168,14 @@ internal class Tokenizer(private val source: String) {
                     }
 
                     if (peek() == '%') {
-                        scale = hundredth
+                        isPercentage = true
                         advance()
                     }
 
                     break@loop
                 }
                 '%' -> {
-                    scale = hundredth
+                    isPercentage = true
                     advance()
                     break@loop
                 }
@@ -190,10 +183,12 @@ internal class Tokenizer(private val source: String) {
             }
         }
 
-        return tokenBuffer.toString().toBigDecimal().let {
-            when {
-                scale != null -> (it * scale)
-                else -> it
+        token =  tokenBuffer.toString().let { text ->
+            text.toBigDecimal().let { v ->
+                Token(text, NUMBER, when {
+                    isPercentage -> v * hundredth
+                    else -> Token(text, NUMBER, v)
+                })
             }
         }
     }
@@ -202,12 +197,20 @@ internal class Tokenizer(private val source: String) {
         while (available() > 0 && peek().isValidVariableChar()) {
             tokenBuffer.append(advance())
         }
+
+        token = Token(tokenBuffer.toString(), VARIABLE)
     }
 
     private fun name() {
         while (available() > 0 && peek().isValidName()) {
             tokenBuffer.append(advance())
         }
+
+        val type = when (val tt = currentTokenType()) {
+            NONE -> NAME
+            else -> tt
+        }
+        token = Token(tokenBuffer.toString(), type)
     }
 
     private fun currentTokenType(): TokenType {

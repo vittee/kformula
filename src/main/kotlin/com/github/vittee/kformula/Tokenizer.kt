@@ -156,6 +156,7 @@ internal class Tokenizer(private val source: String) {
         loop@ while(available() > 0) {
             when (peek()) {
                 in '0'..'9' ->  tokenBuffer.append(advance())
+                '_' -> { advance() }
                 '.' -> {
                     advance()
 

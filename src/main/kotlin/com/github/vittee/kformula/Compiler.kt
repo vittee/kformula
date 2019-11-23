@@ -239,6 +239,8 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
             }
         }
 
+        // TODO: Maybe this should be moved to FunctionSymbol?
+
         val hasVariadic = symbol.params.last() is FunctionVariadicParameterSymbol
         val count = symbol.params.count + (if (hasVariadic) -1 else 0)
 

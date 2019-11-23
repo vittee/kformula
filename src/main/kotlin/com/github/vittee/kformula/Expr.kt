@@ -160,7 +160,7 @@ internal class FunctionExpr(symbol: FunctionSymbol) : SymbolExpr<FunctionSymbol>
             arguments[i].expr = args[i]
         }
 
-        return symbol.handler(arguments)
+        return symbol.call(arguments)
     }
 
     fun addArgument(arg: FunctionArgumentBaseExpr) {

@@ -112,7 +112,7 @@ class CompilerTest : BaseTest() {
         "1*3" ee 3
         "1*0" ee 0
         "1*2*3" ee 6
-        "1.5*2" ee 3.0
+        "1.5*2" ee 3
         "3/2" ee 1.5
     }
 
@@ -248,7 +248,7 @@ class CompilerTest : BaseTest() {
 
     @Test
     fun `Variable expressions`() {
-        "%fifty*100" ee 50.0
+        "%fifty*100" ee 50
         "\$2pi" ee Math.PI*2
         "\$2pi^2" ee Math.PI*Math.PI*2*2
         "\$external" ee Math.PI*3

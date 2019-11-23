@@ -255,6 +255,8 @@ class FunctionSymbol(name: String, signatures: Array<out String>, val handler: F
 
         params += symbol
     }
+
+    fun call(args: FunctionArgumentTable) = handler(args)
 }
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")

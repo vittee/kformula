@@ -15,6 +15,9 @@ sealed class Expr {
 
 class RootExpr(private val child: Expr) : Expr() {
     override fun eval() = child.eval()
+        .stripTrailingZeros()
+        .toPlainString()
+        .toBigDecimal()
 
     fun safeEval(): BigDecimal = try {
         eval()

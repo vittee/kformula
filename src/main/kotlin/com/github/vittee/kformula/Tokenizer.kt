@@ -1,12 +1,15 @@
 package com.github.vittee.kformula
 
 import com.github.vittee.kformula.TokenType.*
+import java.math.BigDecimal
 
 internal data class Token(val text: String, val type: TokenType, val literal: Any? = null)
 
 class ParseError(s: String) : RuntimeException(s)
 
 class InvalidChar(c: Char) : RuntimeException("Invalid character $c")
+
+private val hundredth by lazy { 0.01f.toBigDecimal() }
 
 internal class Tokenizer(private val source: String) {
     private var pos = 0
@@ -118,8 +121,7 @@ internal class Tokenizer(private val source: String) {
             }
             in '0'..'9' -> {
                 tokenBuffer.append(c)
-                number()
-                token = Token(tokenBuffer.toString(), NUMBER, tokenBuffer.toString().toBigDecimal())
+                token = Token(tokenBuffer.toString(), NUMBER,  number())
                 return
             }
             '$','%' -> {
@@ -152,7 +154,9 @@ internal class Tokenizer(private val source: String) {
         token = Token(tokenBuffer.toString(), currentTokenType())
     }
 
-    private fun number() {
+    private fun number(): BigDecimal {
+        var scale: BigDecimal? = null
+
         loop@ while(available() > 0) {
             when (peek()) {
                 in '0'..'9' ->  tokenBuffer.append(advance())
@@ -170,9 +174,26 @@ internal class Tokenizer(private val source: String) {
                         tokenBuffer.append(advance())
                     }
 
+                    if (peek() == '%') {
+                        scale = hundredth
+                        advance()
+                    }
+
+                    break@loop
+                }
+                '%' -> {
+                    scale = hundredth
+                    advance()
                     break@loop
                 }
                 else -> break@loop
+            }
+        }
+
+        return tokenBuffer.toString().toBigDecimal().let {
+            when {
+                scale != null -> (it * scale)
+                else -> it
             }
         }
     }

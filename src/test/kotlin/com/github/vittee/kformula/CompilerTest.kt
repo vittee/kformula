@@ -43,6 +43,7 @@ class CompilerTest : BaseTest() {
         "1" ee 1
         "1_000" ee 1000
         "1.234" ee 1.234
+        "50%" ee 0.5
         "true" ee 1
         "false" ee 0
     }

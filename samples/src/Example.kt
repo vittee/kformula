@@ -18,8 +18,6 @@ fun main() {
             println("myFunc called")
             val all = args["c"].rest.eval()
             println("all is  $all")
-//            val t = args["t"].eval()
-//            println("t is $t")
 
             BigDecimal.ONE
         }
@@ -29,7 +27,7 @@ fun main() {
         }
     }
 
-    val program = fx.compile("subtract_percentage(\$test,%discount)")
+    val program = fx.compile("add(\$ext,1%)")
 
     println(program.eval().toPlainString())
 }

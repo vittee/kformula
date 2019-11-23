@@ -239,8 +239,6 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
             }
         }
 
-        // TODO: Maybe this should be moved to FunctionSymbol?
-
         val hasVariadic = symbol.params.last() is FunctionVariadicParameterSymbol
         val count = symbol.params.count + (if (hasVariadic) -1 else 0)
 
@@ -324,13 +322,13 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
     }
 
     private fun readImmediate(): NumberExpr {
-        if (!tokenizer.testNumber()) {
-            throw CompileError("Number or expression expected")
+        if (tokenizer.testNumber()) {
+            tokenizer.token?.literal?.let {
+                tokenizer.killToken()
+                return NumberExpr(it)
+            }
         }
 
-        val v = tokenizer.token!!.literal as BigDecimal
-        tokenizer.killToken()
-
-        return NumberExpr(v)
+        throw CompileError("Number or expression expected")
     }
 }

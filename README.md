@@ -1,6 +1,6 @@
 KFormula
 ==========
-##### [ภาษาไทย](README-th.md)
+#####  [ภาษาไทย](README-th.md)
 
 Mathematical expression engine written in Kotlin, running on JVM. 
 
@@ -130,7 +130,7 @@ Supported operators
 Special Operators
 -----------------
 
-#####IN range
+##### IN range
 
 Syntax:
 ```
@@ -166,7 +166,7 @@ Returns `false`
 Returns `false`
 
 ---
-#####NOT IN range
+##### NOT IN range
 
 Syntax:
 ```
@@ -207,7 +207,7 @@ Returns `true`
 Returns `true`
 
 ---
-#####Ternary
+##### Ternary
 Syntax #1:
 ```
 if <condition> [then] <true expression> [else <false expression>]
@@ -354,7 +354,7 @@ Built-in functions
 - [add_percentage](#add_percentage)
 - [subtract_percentage](#subtract_percentage)
 
-#####abs
+##### abs
 Returns the absolute value.
 
 Syntax:
@@ -369,7 +369,7 @@ abs(-10)
 
 Returns `10`
 
-#####sum
+##### sum
 Returns the sum of all values.
 
 Syntax:
@@ -384,7 +384,7 @@ sum(1,2,3,4,5)
 
 Returns `15`
 
-#####average
+##### average
 Returns the average of all values.
 
 Syntax:
@@ -399,7 +399,7 @@ average(1,2,3,4,5)
 
 Returns `3`
 
-#####floor
+##### floor
 Returns value rounded down to the nearest integer.
 
 Syntax:
@@ -415,7 +415,7 @@ floor(5.321)
 Returns `5`
 
 
-#####ceil
+##### ceil
 Returns value rounded up to the nearest integer.
 
 Syntax:
@@ -430,7 +430,7 @@ ceil(5.321)
 
 Returns `6`
 
-#####round
+##### round
 Returns value rounded to `precision`.
 
 Syntax:
@@ -457,7 +457,7 @@ round(5.566, 1)
 
 Returns `5.6`
 
-#####min
+##### min
 Returns the minimum value.
 
 Syntax:
@@ -472,7 +472,7 @@ min(5,1,4,2,3)
 
 Returns `1`
 
-#####max
+##### max
 Returns the maximum value.
 
 Syntax:
@@ -487,7 +487,7 @@ max(5,1,4,2,3)
 
 Returns `5`
 
-#####clamp
+##### clamp
 Clamps the value within the inclusive `lower` and `upper` bounds.
 
 Syntax:
@@ -514,7 +514,7 @@ clamp(15, 10, 20)
 
 Returns `15`
 
-#####sqrt
+##### sqrt
 Returns the square root of a number.
 
 Syntax:
@@ -535,7 +535,7 @@ sqrt(2)
 
 Returns `1.414213562373095`
 
-#####add_percentage
+##### add_percentage
 Add a percentage of the value.
 
 Syntax:
@@ -568,7 +568,7 @@ add_percentage(500, -50%)
 
 Returns `250`
 
-#####subtract_percentage
+##### subtract_percentage
 
 Subtract a percentage of the value.
 
@@ -618,7 +618,7 @@ Java `addFunction` method definition:
 public void addFunction(String name, String[] signatures, FunctionCallHandler handler)
 ```
 
-#####Function without parameter
+##### Function without parameter
 
 Kotlin:
 ```kotlin
@@ -649,7 +649,7 @@ one() + one()
 ```
 *Evaluate to `2`*
 
-#####Function with parameters
+##### Function with parameters
 
 To add a function with parameters, just specify a list of parameter names via the `addFunction` method.
 
@@ -688,7 +688,7 @@ add(1,add(2,4))
 
 Returns `7`
 
-#####Default parameters
+##### Default parameters
 
 Parameters can have default values by specifying parameter names using `<name>=<value>` format, e.g. `param2=100`
 
@@ -725,7 +725,8 @@ add(1,2)
 
 Returns `3`
 
-#####Variadic parameters
+##### Variadic parameters
+
 Sometimes, the number of parameters is unknown, you can prefix the parameter name with `...` to make it variadic. (Also known as Rest parameters)
 
 Kotlin:

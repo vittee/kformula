@@ -1,5 +1,5 @@
 # KFormula
-##### [English](README.md)
+#####  [English](README.md)
 
 Engine สำหรับอ่านสูตรคณิตศาสตร์ เขียนด้วย Kotlin, ทำงานบน JVM 
 
@@ -129,7 +129,7 @@ Boolean
 ตัวดำเนินการพิเศษ
 -----------------
 
-#####IN range
+##### IN range
 
 Syntax:
 ```
@@ -165,7 +165,7 @@ Syntax:
 คืนค่า `false`
 
 ---
-#####NOT IN range
+##### NOT IN range
 
 Syntax:
 ```
@@ -206,7 +206,7 @@ not in <begin>...<end>
 คืนค่า `true`
 
 ---
-#####ไตรภาค (Ternary)
+##### ไตรภาค (Ternary)
 Syntax #1:
 ```
 if <condition> [then] <true expression> [else <false expression>]
@@ -352,7 +352,7 @@ Built-in functions
 - [add_percentage](#add_percentage)
 - [subtract_percentage](#subtract_percentage)
 
-#####abs
+##### abs
 คืนค่าสัมบูรณ์
 
 Syntax:
@@ -367,7 +367,7 @@ abs(-10)
 
 คืนค่า `10`
 
-#####sum
+##### sum
 ค่าค่าผลรวมของทุกค่า
 
 Syntax:
@@ -382,7 +382,7 @@ sum(1,2,3,4,5)
 
 คืนค่า `15`
 
-#####average
+##### average
 คืนค่าเฉลี่ย
 
 Syntax:
@@ -397,7 +397,7 @@ average(1,2,3,4,5)
 
 คืนค่า `3`
 
-#####floor
+##### floor
 ปัดเศษลง
 
 Syntax:
@@ -413,7 +413,7 @@ floor(5.321)
 คืนค่า `5`
 
 
-#####ceil
+##### ceil
 ปัดเศษขึ้น
 
 Syntax:
@@ -428,7 +428,7 @@ ceil(5.321)
 
 คืนค่า `6`
 
-#####round
+##### round
 ปัดเศษ ให้เหลือทศนิยมตามที่ระบุไว้โดย `precision`.
 
 Syntax:
@@ -455,7 +455,7 @@ round(5.566, 1)
 
 คืนค่า `5.6`
 
-#####min
+##### min
 หาค่าต่ำสุด
 
 Syntax:
@@ -470,7 +470,7 @@ min(5,1,4,2,3)
 
 คืนค่า `1`
 
-#####max
+##### max
 หาค่าสูงสุด
 
 Syntax:
@@ -485,7 +485,7 @@ max(5,1,4,2,3)
 
 คืนค่า `5`
 
-#####clamp
+##### clamp
 ทำให้ค่าที่กำหนด ให้อยู่ในช่วงตั้งแต่`lower` จนถึง `upper` bounds.
 
 Syntax:
@@ -512,7 +512,7 @@ clamp(15, 10, 20)
 
 คืนค่า `15`
 
-#####sqrt
+##### sqrt
 หาค่ารากที่สอง
 
 Syntax:
@@ -533,7 +533,7 @@ sqrt(2)
 
 คืนค่า `1.414213562373095`
 
-#####add_percentage
+##### add_percentage
 เพิ่มร้อยละให้กับ `value`
 
 Syntax:
@@ -566,7 +566,7 @@ add_percentage(500, -50%)
 
 คืนค่า `250`
 
-#####subtract_percentage
+##### subtract_percentage
 
 หักร้อยละออกจาก `value`
 
@@ -615,7 +615,7 @@ Java `addFunction` method definition:
 public void addFunction(String name, String[] signatures, FunctionCallHandler handler)
 ```
 
-#####ฟังก์ชันทื่ไม่มี parameter
+##### ฟังก์ชันทื่ไม่มี parameter
 
 Kotlin:
 ```kotlin
@@ -646,7 +646,7 @@ one() + one()
 ```
 *คืนค่า `2`*
 
-#####ฟังก์ชันทื่มี parameter
+##### ฟังก์ชันทื่มี parameter
 
 การเพิ่มฟังก์ชันที่มี parameter สามารถทำได้โดยการระบุรายชื่อของ parameter ในตอนเรียก method `addFunction`
 
@@ -685,7 +685,7 @@ add(1,add(2,4))
 
 คืนค่า `7`
 
-#####ค่าปริยาย สำหรับ parameters
+##### ค่าปริยาย สำหรับ parameters
 
 Parameter สามารถมีค่าปริยายได้ โดยการกำหนดชื่อ parameter ในรูปแบบ `<ชื่อ>=<ค่า>` ตัวอย่างเช่น `param2=100`
 
@@ -722,7 +722,7 @@ add(1,2)
 
 คืนค่า `3`
 
-#####Variadic parameters
+##### Variadic parameters
 บางครั้ง จำนวน parameter ก็ไม่มีจำนวนที่แน่นอน เพื่อให้ parameter สามารถรับค่าได้หลาย ๆ ค่า จะต้องใส่เครื่องหมาย `...` ไว้ด้านหน้าของชื่อ parameter
 
 Kotlin:

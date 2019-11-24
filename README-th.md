@@ -20,7 +20,7 @@ This way you can make your application be able to accept mathematical expression
 Maven:
 ```xml
     <dependency>
-    	<groupId>com.github.vittee</groupId>
+    	<groupId>com.github.vittee.kformula</groupId>
     	<artifactId>kformula</artifactId>
     	<version>1.0.1</version>
     </dependency>

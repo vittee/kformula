@@ -21,7 +21,7 @@ Install
 Maven:
 ```xml
     <dependency>
-    	<groupId>com.github.vittee</groupId>
+    	<groupId>com.github.vittee.kformula</groupId>
     	<artifactId>kformula</artifactId>
     	<version>1.0.1</version>
     </dependency>

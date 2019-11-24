@@ -44,6 +44,14 @@ public class Example {
             return a.add(b);
         });
 
+        fx.addFunction("accumulate", new String[]{"init", "...all"}, args -> {
+            BigDecimal init = args.get("init").eval();
+
+            List<Expr> exprs = args.get("all").getRest();
+
+            return exprs.stream().map(Expr::eval).reduce(init, (sum, v) -> sum.add(v));
+        });
+
         System.out.println(
                 fx.compile("myFunc(9, $ext, add(rand(), 1%))")
                         .eval()

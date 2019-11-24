@@ -9,9 +9,14 @@ fun main() {
             99.99.toBigDecimal()
         }
 
-        addFunction("rand") {
+        addFunction("one") {
+            println("one() was called")
+            BigDecimal.ONE
+        }
+
+        addFunction("rand", "min=1", "max=2000") { args ->
             println("rand() was called")
-            (1..2000).random().toBigDecimal()
+            (args["min"]..args["max"]).random().toBigDecimal()
         }
 
         addFunction("myFunc", "...all") { args ->
@@ -25,6 +30,11 @@ fun main() {
         addFunction("add", "a", "b=1") { args ->
             println("add() was called")
             args["a"] + args["b"]
+        }
+
+        this += FunctionSymbol("accumulate", arrayOf("init", "...all")) { args ->
+            val all = args["all"].rest.eval()
+            args["init"] + all.reduce { sum, v -> sum.add(v) }
         }
     }
 

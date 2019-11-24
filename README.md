@@ -23,7 +23,7 @@ Maven:
     <dependency>
     	<groupId>com.github.vittee</groupId>
     	<artifactId>kformula</artifactId>
-    	<version>1.0.0</version>
+    	<version>1.0.1</version>
     </dependency>
 ```
 

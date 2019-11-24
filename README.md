@@ -32,6 +32,9 @@ Gradle:
 repositories {
     jcenter()
     mavenCentral()
+    maven {
+        url = uri("https://dl.bintray.com/vittee/kformula")
+    }
 }
 
 dependencies {

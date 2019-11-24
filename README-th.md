@@ -28,7 +28,16 @@ Maven:
 
 Gradle:
 ```groovy
-    compile 'com.github.vittee:kformula:1.0.0'
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    ...
+    implementation 'com.github.vittee.kformula:kformula:1.0.1'
+    ...
+}
 ```
 
 สารบัญ

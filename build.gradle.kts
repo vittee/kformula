@@ -45,7 +45,7 @@ publishing {
         create<MavenPublication>("default") {
             from(components["java"])
 
-            groupId = "com.github.vittee"
+            groupId = "com.github.vittee.kformula"
             artifactId = "kformula"
         }
     }

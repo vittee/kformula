@@ -10,6 +10,9 @@ class CompilerTest : BaseTest() {
         this += ConstValueSymbol("CONST1", 12345)
         this += DataValueSymbol("%fifty", 0.5)
         this += DataValueSymbol("\$2pi", Math.PI*2)
+        this += DataValueSymbol("\$record.value", 99)
+        this += DataValueSymbol("\$ตัวแปร", 999)
+        this += DataValueSymbol("\$変数", 9999)
         this += ExternalValueSymbol("\$external") { (Math.PI*3).toBigDecimal() }
 
         this += FunctionSymbol("one", emptyArray()) {
@@ -21,11 +24,12 @@ class CompilerTest : BaseTest() {
         }
 
         this += FunctionSymbol("add", arrayOf("a", "b=1")) { args ->
-            args["a"].eval() + args["b"].eval()
+            args["a"] + args["b"]
         }
 
         this += FunctionSymbol("accumulate", arrayOf("init", "...all")) { args ->
-            args[0].eval() + args["all"].rest.eval().reduce { sum, decimal -> sum.add(decimal) }
+            val all = args["all"].rest.eval()
+            args["init"] + all.reduce { sum, v -> sum.add(v) }
         }
     })
 
@@ -246,6 +250,9 @@ class CompilerTest : BaseTest() {
         "\$2pi" ee Math.PI*2
         "\$2pi^2" ee Math.PI*Math.PI*2*2
         "\$external" ee Math.PI*3
+        "\$record.value" ee 99
+        "\$ตัวแปร" ee 999
+        "\$変数" ee 9999
     }
 
     @Test

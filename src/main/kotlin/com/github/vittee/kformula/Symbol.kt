@@ -92,6 +92,10 @@ class FunctionArgumentSymbol(val param: FunctionParameterSymbol, var expr: Funct
     operator fun compareTo(other: Int) = eval().compareTo(other.toBigDecimal())
     operator fun compareTo(other: Double) = eval().compareTo(other.toBigDecimal())
     operator fun compareTo(other: BigDecimal) = eval().compareTo(other)
+
+    operator fun rangeTo(other: FunctionArgumentSymbol) = eval().intValueExact()..other.eval().intValueExact()
+    operator fun rangeTo(other: Int) = eval().intValueExact()..other
+    operator fun rangeTo(other: BigDecimal) = eval().intValueExact()..other.intValueExact()
 }
 
 operator fun Int.plus(other: FunctionArgumentSymbol) = this.toBigDecimal() + other.eval()

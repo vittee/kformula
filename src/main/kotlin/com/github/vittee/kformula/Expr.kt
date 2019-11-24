@@ -114,12 +114,12 @@ internal class IfThenElseValueExpr(val cond: Expr, val trueExpr: Expr, val false
 internal abstract class InExpr(val value: Expr, val begin: Expr, val end: Expr): Expr()
 
 @Suppress("MemberVisibilityCanBePrivate")
-internal class InBetweenExpr(value: Expr, begin: Expr, end: Expr): InExpr(value, begin, end) {
+internal class InRangeExpr(value: Expr, begin: Expr, end: Expr): InExpr(value, begin, end) {
     override fun eval(): BigDecimal = (value.eval() in begin.eval()..end.eval()).toBigDecimal()
 }
 
 @Suppress("MemberVisibilityCanBePrivate")
-internal class NotInBetweenExpr(val right: InBetweenExpr): Expr() {
+internal class NotInRangeExpr(val right: InRangeExpr): Expr() {
     override fun eval(): BigDecimal = right.eval().toBool().not().toBigDecimal()
 }
 

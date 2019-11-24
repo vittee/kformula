@@ -31,7 +31,7 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
             val tt = tokenizer.testDeleteAny(EQUAL, EQUAL_EQUAL, NOT_EQ, EX_EQ, LESS, LESS_EQ, GREATER, GREATER_EQ, IN)
             left = when (tt) {
                 NONE -> break@loop
-                IN -> readInBetweenExpr(left)
+                IN -> readInRangeExpr(left)
                 else -> {
                     val right = readExprAdd()
 
@@ -58,7 +58,7 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
             val tt = tokenizer.testDeleteAny(PLUS, MINUS, OR, NOT, EXCLAMATION)
             left = when (tt) {
                 NONE -> break@loop
-                NOT, EXCLAMATION -> readNotInExpr(left)
+                NOT, EXCLAMATION -> readNotInRangeExpr(left)
                 else -> {
                     val right = readExprMulti()
                     when (tt) {
@@ -174,26 +174,26 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
         return IfThenElseValueExpr(cond, trueExpr, falseExpr)
     }
 
-    private fun readInBetweenExpr(left: Expr): InBetweenExpr {
+    private fun readInRangeExpr(left: Expr): InRangeExpr {
         val hasParenthesis = tokenizer.testDelete(B_LEFT)
 
         val begin = readExpr()
 
-        if (tokenizer.testDeleteAny(BETWEEN, DOT_DOT) == NONE) {
-            throw CompileError("BETWEEN/.. expected")
+        if (!tokenizer.testDelete(DOT_DOT)) {
+            throw CompileError(".. expected")
         }
 
         val end = if (hasParenthesis) readBracket() else readExpr()
 
-        return InBetweenExpr(left, begin, end)
+        return InRangeExpr(left, begin, end)
     }
 
-    private fun readNotInExpr(left: Expr): NotInBetweenExpr {
+    private fun readNotInRangeExpr(left: Expr): NotInRangeExpr {
         if (!tokenizer.testDelete(IN)) {
             throw CompileError("IN expected")
         }
 
-        return NotInBetweenExpr(readInBetweenExpr(left))
+        return NotInRangeExpr(readInRangeExpr(left))
     }
 
     private fun readBracket(): Expr {

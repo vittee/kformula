@@ -9,5 +9,5 @@ internal enum class TokenType {
 
     AND, OR, NOT, MOD, TRUE, FALSE,
     IF, THEN, ELSE,
-    IN, BETWEEN
+    IN
 }

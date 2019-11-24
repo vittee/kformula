@@ -247,7 +247,6 @@ internal class Tokenizer(private val source: String) {
             "then" -> THEN
             "else" -> ELSE
             "in" -> IN
-            "between" -> BETWEEN
             else -> NONE
         }
     }

@@ -1,0 +1,9 @@
+stages:
+  - name: release
+jobs:
+  include:
+    - stage: release
+      script: ./gradlew bintrayUpload
+      os: linux
+      language: java
+      jdk: openjdk11

@@ -6,7 +6,7 @@ plugins {
     id("com.jfrog.bintray") version  "1.8.4"
 }
 
-project.group = "com.github.vittee"
+project.group = "com.github.vittee.kformula"
 project.version = "1.0.1"
 
 repositories {
@@ -35,11 +35,6 @@ val sourcesJar by tasks.creating(Jar::class) {
     from(sourceSets.main.get().allSource)
 }
 
-artifacts {
-    add("archives", sourcesJar)
-    add("archives", javaDocJar)
-}
-
 publishing {
     publications {
         create<MavenPublication>("default") {
@@ -47,6 +42,10 @@ publishing {
 
             groupId = "com.github.vittee.kformula"
             artifactId = "kformula"
+
+            artifact(sourcesJar) {
+                classifier = "sources"
+            }
         }
     }
 }

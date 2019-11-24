@@ -7,7 +7,7 @@ plugins {
 }
 
 project.group = "com.github.vittee"
-project.version = "1.0"
+project.version = "1.0.1"
 
 repositories {
     jcenter()

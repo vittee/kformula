@@ -217,25 +217,19 @@ class CompilerTest : BaseTest() {
     }
 
     @Test
-    fun `IN BETWEEN`() {
-        "1 in 1 between 10" ee 1
-        "0 in 1 between 10" ee 0
+    fun `IN RANGE`() {
         "1 in 1..10" ee 1
         "0 in 1..10" ee 0
     }
 
     @Test
-    fun `NOT IN BETWEEN`() {
-        "1 not in 1 between 10" ee 0
-        "0 not in 1 between 10" ee 1
+    fun `NOT IN RANGE`() {
         "1 not in 1..10" ee 0
         "0 not in 1..10" ee 1
     }
 
     @Test
-    fun `!IN BETWEEN`() {
-        "1 !in 1 between 10" ee 0
-        "0 !in 1 between 10" ee 1
+    fun `!IN RANGE`() {
         "1 !in 1..10" ee 0
         "0 !in 1..10" ee 1
     }

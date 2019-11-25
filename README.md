@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     ...
-    implementation 'com.github.vittee.kformula:kformula:1.0.1'
+    implementation 'com.github.vittee.kformula:kformula:1.0.2'
     ...
 }
 ```

@@ -322,8 +322,8 @@ fx.addVariable("%fifty", 0.5);
 
 Adding external/dynamic variable
 --------------------------------
-You can retreive a runtime variable to your formula.
-To do so, you can retreive it with a callback function, then use it by "\$external" (Kotlin) or "$external" (Java).
+You can use a runtime variable in your formula.
+To do so, you can retreive the runtime variable with a callback function, then use it by "\$external" (Kotlin) or "$external" (Java).
 
 Kotlin:
 ```kotlin

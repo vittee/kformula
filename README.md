@@ -322,9 +322,8 @@ fx.addVariable("%fifty", 0.5);
 
 Adding external/dynamic variable
 --------------------------------
-Sometimes you may need to have a variable that its value is retrieved from the application when evaluated.
-
-This could be done by adding a variable as an external variable, so a callback function must be specified instead of adding a fixed value to the variable.
+You can retreive a runtime variable to your formula.
+To do so, you can retreive it with a callback function, then use it by "\$external" (Kotlin) or "$external" (Java).
 
 Kotlin:
 ```kotlin

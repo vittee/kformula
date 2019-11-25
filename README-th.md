@@ -8,32 +8,20 @@ Engine สำหรับอ่านสูตรคณิตศาสตร์ 
 [![MIT License](https://img.shields.io/github/license/vittee/kformula)](https://github.com/vittee/kformula/blob/master/LICENSE)
 
 
-With KFormula, you can parse simple mathematical expression text and get the evaluated result.
+ใช้ KFormula เพื่ออ่านสูตรคณิตศาสตร์ใน String　และคำนวณเพื่อหาผลลัพธ์
 
-You can add variables/constants, or beyond that, you can define your own function and expose the logic to the engine.
+คุณสามารถเพิ่มตัวแปรและค่าคงที่ ยังไม่พอ ยังสามารถเพิ่มฟังก์ชันให้มันได้ด้วย
 
-This way you can make your application be able to accept mathematical expression from user's input, or even from database. If the calculation should be made, simple change the expression to get the new calculation logic apply to your application with recompiling!
+ด้วยวิธีนี้ จะทำให้ application ของคุณสามารถอ่านสูตรคณิตศาสตร์ที่ user เป็นคนใส่เข้ามา หรือแม้กระทั่งเก็บสูตรเอาไว้ในฐานข้อมูล เมื่อใดก็ตามหากต้องการเปลี่ยนวิธีการคำนวณ ก็เพียงแค่เปลี่ยนสูตรได้เลย โดยไม่ต้องคอมไพล์ใหม่
 
 การติดตั้ง
 -------
-
-Maven:
-```xml
-    <dependency>
-    	<groupId>com.github.vittee.kformula</groupId>
-    	<artifactId>kformula</artifactId>
-    	<version>1.0.1</version>
-    </dependency>
-```
 
 Gradle:
 ```groovy
 repositories {
     jcenter()
     mavenCentral()
-    maven {
-        url = uri("https://dl.bintray.com/vittee/kformula")
-    }
 }
 
 dependencies {
@@ -340,6 +328,7 @@ val fx = Formula().apply {
     addExternalVariable("\$external") {
         getValue()
     }
+}
 ```
 
 Java (with Lambda):

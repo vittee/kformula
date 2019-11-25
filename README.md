@@ -20,23 +20,11 @@ If the calculation should be made, simply change the expression to get the new c
 Install
 -------
 
-Maven:
-```xml
-    <dependency>
-    	<groupId>com.github.vittee.kformula</groupId>
-    	<artifactId>kformula</artifactId>
-    	<version>1.0.1</version>
-    </dependency>
-```
-
 Gradle:
 ```groovy
 repositories {
     jcenter()
     mavenCentral()
-    maven {
-        url = uri("https://dl.bintray.com/vittee/kformula")
-    }
 }
 
 dependencies {
@@ -344,6 +332,7 @@ val fx = Formula().apply {
     addExternalVariable("\$external") {
         getValue()
     }
+}
 ```
 
 Java (with Lambda):

@@ -3,6 +3,7 @@
 
 Engine สำหรับอ่านสูตรคณิตศาสตร์ เขียนด้วย Kotlin, ทำงานบน JVM 
 
+[![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin)
 [![Travis CI](https://img.shields.io/travis/vittee/kformula)]()
 [![Kotlin 1.3.50](https://img.shields.io/badge/kotlin-1.3.50-blue)](http://kotlinlang.org)
 [![MIT License](https://img.shields.io/github/license/vittee/kformula)](https://github.com/vittee/kformula/blob/master/LICENSE)
@@ -326,7 +327,7 @@ Kotlin:
 ```kotlin
 val fx = Formula().apply { 
     addExternalVariable("\$external") {
-        getValue()
+        getValue().toBigDecimal()
     }
 }
 ```

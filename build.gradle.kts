@@ -1,13 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.50"
+    kotlin("jvm") version "1.3.60"
     `maven-publish`
     id("com.jfrog.bintray") version  "1.8.4"
 }
 
 project.group = "com.github.vittee.kformula"
-project.version = "1.0.1"
+project.version = "1.0.2"
 
 repositories {
     jcenter()

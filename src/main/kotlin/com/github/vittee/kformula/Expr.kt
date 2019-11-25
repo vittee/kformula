@@ -131,27 +131,27 @@ internal class ValueSymbolExpr(symbol: ValueSymbol) : SymbolExpr<ValueSymbol>(sy
     override fun eval() = symbol.value
 }
 
-abstract class FunctionArgumentBaseExpr(val param: FunctionParameterSymbol) : Expr()
+abstract class ArgumentBaseExpr(val param: ParameterSymbol) : Expr()
 
 @Suppress("MemberVisibilityCanBePrivate")
-class FunctionLazyArgumentExpr(param: FunctionParameterSymbol, val expr: Expr) : FunctionArgumentBaseExpr(param) {
+class LazyArgumentExpr(param: ParameterSymbol, val expr: Expr) : ArgumentBaseExpr(param) {
     override fun eval() = expr.eval()
 }
 
 @Suppress("MemberVisibilityCanBePrivate")
-open class FunctionArgumentExpr(param: FunctionParameterSymbol, val value: BigDecimal) : FunctionArgumentBaseExpr(param) {
+open class ArgumentExpr(param: ParameterSymbol, val value: BigDecimal) : ArgumentBaseExpr(param) {
     override fun eval() = value
 }
 
-class FunctionVariadicArgumentExpr(param: FunctionParameterSymbol, val elements: List<Expr>) : FunctionArgumentBaseExpr(param) {
+class VariadicArgumentExpr(param: ParameterSymbol, val elements: List<Expr>) : ArgumentBaseExpr(param) {
     override fun eval(): BigDecimal = BigDecimal.ZERO
 }
 
-class FunctionArgumentZeroExpr(param: FunctionParameterSymbol) : FunctionArgumentExpr(param, BigDecimal.ZERO)
+class ArgumentZeroExpr(param: ParameterSymbol) : ArgumentExpr(param, BigDecimal.ZERO)
 
 @Suppress("MemberVisibilityCanBePrivate")
 internal class FunctionExpr(symbol: FunctionSymbol) : SymbolExpr<FunctionSymbol>(symbol) {
-    private val args = mutableListOf<FunctionArgumentBaseExpr>()
+    private val args = mutableListOf<ArgumentBaseExpr>()
 
     val arguments = FunctionArgumentTable()
 
@@ -163,7 +163,7 @@ internal class FunctionExpr(symbol: FunctionSymbol) : SymbolExpr<FunctionSymbol>
         return symbol.call(arguments)
     }
 
-    fun addArgument(arg: FunctionArgumentBaseExpr) {
+    fun addArgument(arg: ArgumentBaseExpr) {
         args += arg
     }
 
@@ -171,7 +171,7 @@ internal class FunctionExpr(symbol: FunctionSymbol) : SymbolExpr<FunctionSymbol>
         arguments.clear()
         for (i in 0 until symbol.params.count) {
             val p = symbol.params[i]
-            arguments += FunctionArgumentSymbol(p, FunctionArgumentZeroExpr(p))
+            arguments += ArgumentSymbol(p, ArgumentZeroExpr(p))
         }
     }
 }

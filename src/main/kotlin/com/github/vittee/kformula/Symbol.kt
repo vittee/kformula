@@ -42,33 +42,33 @@ class ExternalValueSymbol(name: String, private val resolver: ExternalValueResol
         get() = resolver(name)
 }
 
-open class FunctionParameterSymbol(name: String, val default: BigDecimal?) : Symbol(name) {
-    fun isVariadic() = this is FunctionVariadicParameterSymbol
+open class ParameterSymbol(name: String, val default: BigDecimal?) : Symbol(name) {
+    fun isVariadic() = this is VariadicParameterSymbol
 }
 
-class FunctionLazyParameterSymbol(name: String, default: BigDecimal?) : FunctionParameterSymbol(name, default)
+class LazyParameterSymbol(name: String, default: BigDecimal?) : ParameterSymbol(name, default)
 
-class FunctionVariadicParameterSymbol(name: String) : FunctionParameterSymbol(name, null)
+class VariadicParameterSymbol(name: String) : ParameterSymbol(name, null)
 
-typealias FunctionArgumentTable = SymbolTable<FunctionArgumentSymbol>
+typealias FunctionArgumentTable = SymbolTable<ArgumentSymbol>
 
 typealias FunctionCallHandler = (args: FunctionArgumentTable) -> BigDecimal
 
 @Suppress("MemberVisibilityCanBePrivate")
-class FunctionArgumentSymbol(val param: FunctionParameterSymbol, var expr: FunctionArgumentBaseExpr) : Symbol(param.name) {
+class ArgumentSymbol(val param: ParameterSymbol, var expr: ArgumentBaseExpr) : Symbol(param.name) {
     fun eval() = expr.eval()
 
     val rest
-        get() = (expr as? FunctionVariadicArgumentExpr)?.elements ?: throw RuntimeException("Argument is not variadic")
+        get() = (expr as? VariadicArgumentExpr)?.elements ?: throw RuntimeException("Argument is not variadic")
 
     operator fun unaryMinus() = -eval()
     operator fun unaryPlus() = eval()
     operator fun not(): BigDecimal = if (eval() == BigDecimal.ZERO) BigDecimal.ONE else BigDecimal.ZERO
-    operator fun plus(other: FunctionArgumentSymbol) = eval() + other.eval()
-    operator fun minus(other: FunctionArgumentSymbol) = eval() - other.eval()
-    operator fun times(other: FunctionArgumentSymbol) = eval() * other.eval()
-    operator fun div(other: FunctionArgumentSymbol) = eval() / other.eval()
-    operator fun rem(other: FunctionArgumentSymbol) = eval() % other.eval()
+    operator fun plus(other: ArgumentSymbol) = eval() + other.eval()
+    operator fun minus(other: ArgumentSymbol) = eval() - other.eval()
+    operator fun times(other: ArgumentSymbol) = eval() * other.eval()
+    operator fun div(other: ArgumentSymbol) = eval() / other.eval()
+    operator fun rem(other: ArgumentSymbol) = eval() % other.eval()
 
     operator fun plus(other: Int) = eval() + other.toBigDecimal()
     operator fun minus(other: Int) = eval() - other.toBigDecimal()
@@ -88,36 +88,36 @@ class FunctionArgumentSymbol(val param: FunctionParameterSymbol, var expr: Funct
     operator fun div(other: BigDecimal) = eval() / other
     operator fun rem(other: BigDecimal) = eval() % other
 
-    operator fun compareTo(other: FunctionArgumentSymbol) = eval().compareTo(other.eval())
+    operator fun compareTo(other: ArgumentSymbol) = eval().compareTo(other.eval())
     operator fun compareTo(other: Int) = eval().compareTo(other.toBigDecimal())
     operator fun compareTo(other: Double) = eval().compareTo(other.toBigDecimal())
     operator fun compareTo(other: BigDecimal) = eval().compareTo(other)
 
-    operator fun rangeTo(other: FunctionArgumentSymbol) = eval().intValueExact()..other.eval().intValueExact()
+    operator fun rangeTo(other: ArgumentSymbol) = eval().intValueExact()..other.eval().intValueExact()
     operator fun rangeTo(other: Int) = eval().intValueExact()..other
     operator fun rangeTo(other: BigDecimal) = eval().intValueExact()..other.intValueExact()
 }
 
-operator fun Int.plus(other: FunctionArgumentSymbol) = this.toBigDecimal() + other.eval()
-operator fun Int.minus(other: FunctionArgumentSymbol) = this.toBigDecimal() - other.eval()
-operator fun Int.times(other: FunctionArgumentSymbol) = this.toBigDecimal() * other.eval()
-operator fun Int.div(other: FunctionArgumentSymbol) = this.toBigDecimal() / other.eval()
-operator fun Int.rem(other: FunctionArgumentSymbol) = this.toBigDecimal() % other.eval()
-operator fun Int.compareTo(other: FunctionArgumentSymbol) = this.toBigDecimal().compareTo(other.eval())
+operator fun Int.plus(other: ArgumentSymbol) = this.toBigDecimal() + other.eval()
+operator fun Int.minus(other: ArgumentSymbol) = this.toBigDecimal() - other.eval()
+operator fun Int.times(other: ArgumentSymbol) = this.toBigDecimal() * other.eval()
+operator fun Int.div(other: ArgumentSymbol) = this.toBigDecimal() / other.eval()
+operator fun Int.rem(other: ArgumentSymbol) = this.toBigDecimal() % other.eval()
+operator fun Int.compareTo(other: ArgumentSymbol) = this.toBigDecimal().compareTo(other.eval())
 
-operator fun Double.plus(other: FunctionArgumentSymbol) = this.toBigDecimal() + other.eval()
-operator fun Double.minus(other: FunctionArgumentSymbol) = this.toBigDecimal() - other.eval()
-operator fun Double.times(other: FunctionArgumentSymbol) = this.toBigDecimal() * other.eval()
-operator fun Double.div(other: FunctionArgumentSymbol) = this.toBigDecimal() / other.eval()
-operator fun Double.rem(other: FunctionArgumentSymbol) = this.toBigDecimal() % other.eval()
-operator fun Double.compareTo(other: FunctionArgumentSymbol) = this.toBigDecimal().compareTo(other.eval())
+operator fun Double.plus(other: ArgumentSymbol) = this.toBigDecimal() + other.eval()
+operator fun Double.minus(other: ArgumentSymbol) = this.toBigDecimal() - other.eval()
+operator fun Double.times(other: ArgumentSymbol) = this.toBigDecimal() * other.eval()
+operator fun Double.div(other: ArgumentSymbol) = this.toBigDecimal() / other.eval()
+operator fun Double.rem(other: ArgumentSymbol) = this.toBigDecimal() % other.eval()
+operator fun Double.compareTo(other: ArgumentSymbol) = this.toBigDecimal().compareTo(other.eval())
 
-operator fun BigDecimal.plus(other: FunctionArgumentSymbol) = this + other.eval()
-operator fun BigDecimal.minus(other: FunctionArgumentSymbol) = this - other.eval()
-operator fun BigDecimal.times(other: FunctionArgumentSymbol) = this * other.eval()
-operator fun BigDecimal.div(other: FunctionArgumentSymbol) = this / other.eval()
-operator fun BigDecimal.rem(other: FunctionArgumentSymbol) = this % other.eval()
-operator fun BigDecimal.compareTo(other: FunctionArgumentSymbol) = this.compareTo(other.eval())
+operator fun BigDecimal.plus(other: ArgumentSymbol) = this + other.eval()
+operator fun BigDecimal.minus(other: ArgumentSymbol) = this - other.eval()
+operator fun BigDecimal.times(other: ArgumentSymbol) = this * other.eval()
+operator fun BigDecimal.div(other: ArgumentSymbol) = this / other.eval()
+operator fun BigDecimal.rem(other: ArgumentSymbol) = this % other.eval()
+operator fun BigDecimal.compareTo(other: ArgumentSymbol) = this.compareTo(other.eval())
 
 operator fun BigDecimal.plus(other: Int) = this + other.toBigDecimal()
 operator fun BigDecimal.minus(other: Int) = this - other.toBigDecimal()
@@ -131,27 +131,27 @@ operator fun BigDecimal.times(other: Double) = this * other.toBigDecimal()
 operator fun BigDecimal.div(other: Double) = this / other.toBigDecimal()
 operator fun BigDecimal.rem(other: Double) = this % other.toBigDecimal()
 
-fun FunctionArgumentSymbol?.isVariadic() = this?.param is FunctionVariadicParameterSymbol
+fun ArgumentSymbol?.isVariadic() = this?.param is VariadicParameterSymbol
 
-fun FunctionArgumentSymbol?.asVariadic() = this?.expr as? FunctionVariadicArgumentExpr
+fun ArgumentSymbol?.asVariadic() = this?.expr as? VariadicArgumentExpr
 
 fun List<Expr>.eval(): List<BigDecimal> = map(Expr::eval)
 
 class FunctionSymbol(name: String, signatures: Array<out String>, val handler: FunctionCallHandler) : Symbol(name) {
-    val params = SymbolTable<FunctionParameterSymbol>()
+    val params = SymbolTable<ParameterSymbol>()
 
     init {
         signatures.forEach { s -> parseSignature(s).let { signature ->
             when {
-                signature.variadic -> FunctionVariadicParameterSymbol(signature.name)
-                signature.lazy -> FunctionLazyParameterSymbol(signature.name, signature.default)
-                else -> FunctionParameterSymbol(signature.name, signature.default)
+                signature.variadic -> VariadicParameterSymbol(signature.name)
+                signature.lazy -> LazyParameterSymbol(signature.name, signature.default)
+                else -> ParameterSymbol(signature.name, signature.default)
             }.let(::addParameter)
         }}
 
         // Variadic should be the last
         for (i in 0 until params.count - 1 ) {
-            if (params[i] is FunctionVariadicParameterSymbol) {
+            if (params[i] is VariadicParameterSymbol) {
                 throw RuntimeException("Variadic parameter must be in the last position")
             }
         }
@@ -252,8 +252,8 @@ class FunctionSymbol(name: String, signatures: Array<out String>, val handler: F
         return Signature(name.trim().toLowerCase(), defaultValue, lazy, variadic)
     }
 
-    private fun addParameter(symbol: FunctionParameterSymbol) {
-        if (params.last() is FunctionVariadicParameterSymbol) {
+    private fun addParameter(symbol: ParameterSymbol) {
+        if (params.last() is VariadicParameterSymbol) {
             throw RuntimeException("Variadic/rest parameter cannot be followed")
         }
 

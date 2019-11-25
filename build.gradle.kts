@@ -7,7 +7,7 @@ plugins {
 }
 
 project.group = "com.github.vittee.kformula"
-project.version = "1.0.1"
+project.version = "1.0.2"
 
 repositories {
     jcenter()

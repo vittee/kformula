@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     ...
-    implementation 'com.github.vittee.kformula:kformula:1.0.1'
+    implementation 'com.github.vittee.kformula:kformula:1.0.2'
     ...
 }
 ```
@@ -323,9 +323,8 @@ fx.addVariable("%fifty", 0.5);
 
 Adding external/dynamic variable
 --------------------------------
-Sometimes you may need to have a variable that its value is retrieved from the application when evaluated.
-
-This could be done by adding a variable as an external variable, so a callback function must be specified instead of adding a fixed value to the variable.
+It is possible to use a runtime variable in your formula.
+To do so, you can retreive the runtime variable with a callback function, then use it by "\$external" (Kotlin) or "$external" (Java).
 
 Kotlin:
 ```kotlin

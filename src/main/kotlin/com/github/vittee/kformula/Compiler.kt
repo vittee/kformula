@@ -239,7 +239,7 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
             }
         }
 
-        val hasVariadic = symbol.params.last() is FunctionVariadicParameterSymbol
+        val hasVariadic = symbol.params.last() is VariadicParameterSymbol
         val count = symbol.params.count + (if (hasVariadic) -1 else 0)
 
         // fill default values
@@ -271,14 +271,14 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
 
             static.forEachIndexed { index, expr ->
                 when (val param = symbol.params[index]) {
-                    is FunctionLazyParameterSymbol -> FunctionLazyArgumentExpr(param, expr)
-                    else -> FunctionArgumentExpr(param, expr.eval())
+                    is LazyParameterSymbol -> LazyArgumentExpr(param, expr)
+                    else -> ArgumentExpr(param, expr.eval())
                 }.let(::addArgument)
             }
 
             if (hasVariadic) {
-                FunctionVariadicArgumentExpr(
-                    symbol.params.last() as FunctionParameterSymbol,
+                VariadicArgumentExpr(
+                    symbol.params.last() as ParameterSymbol,
                     args.slice(count until args.size)
                 ).let(::addArgument)
             }

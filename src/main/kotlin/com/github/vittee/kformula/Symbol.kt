@@ -2,6 +2,10 @@ package com.github.vittee.kformula
 
 import java.math.BigDecimal
 
+internal interface ICanBePercentage {
+    val isPercentage: Boolean
+}
+
 sealed class Symbol(name: String) {
     val name = name.toLowerCase()
 

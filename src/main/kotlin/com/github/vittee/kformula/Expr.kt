@@ -32,6 +32,9 @@ internal open class NumberExpr(private val value: BigDecimal) : Expr() {
 }
 
 internal abstract class UnaryExpr(val right: Expr) : Expr()
+internal class PercentageExpr(value: BigDecimal) : NumberExpr(value), ICanBePercentage {
+    override val isPercentage = true
+}
 
 internal abstract class BinaryExpr(val left: Expr, val op: TokenType, val right: Expr) : Expr()
 

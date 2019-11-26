@@ -89,7 +89,9 @@ Percentage numeric literal
  |  Literal  |  Value    |
  |-----------|-----------|
  |  `100%`   |   1.0     |
- |  `50%`    |   0.5      |
+ |  `50%`    |   0.5     |
+ 
+ They can be used in [percentage operations](#percentage-operations)
  
 Boolean
 ---------------
@@ -109,6 +111,8 @@ Example or valid variable names:
 | `$record.value`  |
 | `$ตัวแปร`  |
 | `$変数`  |
+
+Variable name that begin with `%` sign can be used in [percentage operations](#percentage-operations)
 
 Supported operators
 -------------------
@@ -260,6 +264,23 @@ Returns `30` if `$weight` is greater than 100
 Returns `0` if `$weight` is less than or equal 100
 
 ---
+
+Percentage operations
+---------------------
+Any variables with name started with `%` sign and any numbers that ended with `%` sign are considered as percentage values and can be used in adding/subtracting percentage from a value.
+
+Only `+` and `-` work with right hand side percentage value, e.g:
+
+| Expression | Result |
+|------------|--------|
+| 30 + 50%   |   45   |
+| 400 - 50%  |  200   |
+| 120 + %fifty |  180 | 
+| 400 - %discount |  300 |
+
+*Assuming that `%fifty` variable is `0.5` and `%discount` is `0.25`* 
+
+**Note:** Any other operations on percentage values will result in normal arithmetic operations and the result is still percentage value. 
 
 Usage
 =====

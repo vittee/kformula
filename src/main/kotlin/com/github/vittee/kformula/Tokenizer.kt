@@ -183,9 +183,11 @@ internal class Tokenizer(private val source: String) {
             }
         }
 
+        val tt = if (isPercentage) PERCENTAGE else NUMBER
+
         token =  tokenBuffer.toString().let { text ->
             text.toBigDecimal().let { v ->
-                Token(text, NUMBER, when {
+                Token(text, tt, when {
                     isPercentage -> v * hundredth
                     else -> v
                 })

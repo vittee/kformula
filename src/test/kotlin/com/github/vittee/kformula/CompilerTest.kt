@@ -298,6 +298,44 @@ class CompilerTest : BaseTest() {
     }
 
     @Test
+    fun `Left hand side percentage operations`() {
+        "50% + 50% + 1" ee 2
+        "50% - 50% + 1" ee 1
+        "(50% + 50%) * 2" ee 2
+        "(50% + 50%) / 2" ee 0.5
+        "(50% * 3) * 2 ^ 3" ee 27
+        "(%fifty * 3) * 2 ^ 3" ee 27
+    }
+
+    @Test
+    fun `Right hand side percentage operations`() {
+        "100 + (50% + 50%)" ee 200
+        "100 + (50% + 2)" ee 350
+        "100 + (50% - 1)" ee 50
+        "60 + (100% * 2)" ee 180
+        "60 + (300% / 3)" ee 120
+        "100 - (50% + 50%)" ee 0
+        "60 - (50% + 2)" ee -90
+        "60 - (%fifty + 2)" ee -90
+        "100 * (50% + 30%)" ee 80
+        "24 / (50% + 30%)" ee 30
+        "(60 + 50%) + 50%" ee 135
+        "(60 + %fifty) + 50%" ee 135
+        "(60 - 50%) + 50%" ee 45
+        "(60 - %fifty) + 50%" ee 45
+        "100 * 40% + 50%" ee 60
+        "60 * 40% + 50%" ee 36
+        "400 / 50% + 50%" ee 1200
+    }
+
+    @Test
+    fun `Right recursive percentage operations`() {
+        "100 + 50% + 100%" ee 300
+        "60 + 50% + 50%" ee 135
+        "60 - 50% + 50%" ee 45
+    }
+
+    @Test
     fun `Simple function`() {
         "one()" ee 1
         "one()+1" ee 2

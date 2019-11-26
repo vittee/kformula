@@ -27,7 +27,7 @@ class RootExpr(private val child: Expr) : Expr() {
     }
 }
 
-internal class NumberExpr(private val value: BigDecimal) : Expr() {
+internal open class NumberExpr(private val value: BigDecimal) : Expr() {
     override fun eval() = value
 }
 

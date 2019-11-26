@@ -59,11 +59,6 @@ class FormulaTest : BaseTest() {
     fun `Percentage calculation`() {
         "\$price * %discount" ee 676
         "\$price * -%discount" ee -676
-        "\$price - (\$price * %discount)" ee 1014
-        "\$price * (1-%discount)" ee 1014
-        "\$discounted / (1-%discount)" ee 1690
-        "add_percentage(\$price, +50%)" ee 2535
-        "add_percentage(\$price, -%discount)" ee 1014
-        "subtract_percentage(\$price, %discount)" ee 1014
+        "\$price - %discount" ee 1014
     }
 }

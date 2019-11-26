@@ -64,8 +64,6 @@ Table Of Contents
         - [max](#max)
         - [clamp](#clamp)
         - [sqrt](#sqrt)
-        - [add_percentage](#add_percentage)
-        - [subtract_percentage](#subtract_percentage)    
     - [Adding function](#adding-function)
         - [Function without parameter](#function-without-parameter)
         - [Function with parameters](#function-with-parameters)
@@ -375,8 +373,6 @@ Built-in functions
 - [max](#max)
 - [clamp](#clamp)
 - [sqrt](#sqrt)
-- [add_percentage](#add_percentage)
-- [subtract_percentage](#subtract_percentage)
 
 ##### abs
 Returns the absolute value.
@@ -558,74 +554,6 @@ sqrt(2)
 ```
 
 Returns `1.414213562373095`
-
-##### add_percentage
-Add a percentage of the value.
-
-Syntax:
-```
-add_percentage(<value>, <percentage>)
-```
-
-Example:
-```
-add_percentage(500, 0.5)
-```
-
-Returns `750`
-
-```
-add_percentage(500, 50%)
-```
-
-Returns `750`
-
-```
-add_percentage(500, +50%)
-```
-
-Returns `750`
-
-```
-add_percentage(500, -50%)
-```
-
-Returns `250`
-
-##### subtract_percentage
-
-Subtract a percentage of the value.
-
-Syntax:
-```
-subtract_percentage(<value>, <percentage>)
-```
-
-Example:
-```
-subtract_percentage(500, 0.5)
-```
-
-Returns `250`
-
-```
-subtract_percentage(500, 50%)
-```
-
-Returns `250`
-
-```
-subtract_percentage(500, +50%)
-```
-
-Returns `250`
-
-Example:
-```
-subtract_percentage(500, -50%)
-```
-
-Returns `750`
 
 Adding function
 ---------------

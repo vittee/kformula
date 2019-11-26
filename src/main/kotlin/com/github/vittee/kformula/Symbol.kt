@@ -102,12 +102,26 @@ class ArgumentSymbol(val param: ParameterSymbol, var expr: ArgumentBaseExpr) : S
     operator fun rangeTo(other: BigDecimal) = eval().intValueExact()..other.intValueExact()
 }
 
+operator fun Int.plus(other: BigDecimal) = this.toBigDecimal() + other
+operator fun Int.minus(other: BigDecimal) = this.toBigDecimal() - other
+operator fun Int.times(other: BigDecimal) = this.toBigDecimal() * other
+operator fun Int.div(other: BigDecimal) = this.toBigDecimal() / other
+operator fun Int.rem(other: BigDecimal) = this.toBigDecimal() % other
+operator fun Int.compareTo(other: BigDecimal) = this.toBigDecimal().compareTo(other)
+
 operator fun Int.plus(other: ArgumentSymbol) = this.toBigDecimal() + other.eval()
 operator fun Int.minus(other: ArgumentSymbol) = this.toBigDecimal() - other.eval()
 operator fun Int.times(other: ArgumentSymbol) = this.toBigDecimal() * other.eval()
 operator fun Int.div(other: ArgumentSymbol) = this.toBigDecimal() / other.eval()
 operator fun Int.rem(other: ArgumentSymbol) = this.toBigDecimal() % other.eval()
 operator fun Int.compareTo(other: ArgumentSymbol) = this.toBigDecimal().compareTo(other.eval())
+
+operator fun Double.plus(other: BigDecimal) = this.toBigDecimal() + other
+operator fun Double.minus(other: BigDecimal) = this.toBigDecimal() - other
+operator fun Double.times(other: BigDecimal) = this.toBigDecimal() * other
+operator fun Double.div(other: BigDecimal) = this.toBigDecimal() / other
+operator fun Double.rem(other: BigDecimal) = this.toBigDecimal() % other
+operator fun Double.compareTo(other: BigDecimal) = this.toBigDecimal().compareTo(other)
 
 operator fun Double.plus(other: ArgumentSymbol) = this.toBigDecimal() + other.eval()
 operator fun Double.minus(other: ArgumentSymbol) = this.toBigDecimal() - other.eval()

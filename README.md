@@ -267,7 +267,7 @@ Returns `0` if `$weight` is less than or equal 100
 
 Percentage operations
 ---------------------
-Any variables with name started with `%` sign and any numbers that ended with `%` sign are considered as percentage values and can be used in adding/subtracting percentage from a value.
+Any variables with name started with `%` sign and any numbers that ended with `%` sign are considered as percentage values and can be used in *adding* and *subtracting* percentage from a value.
 
 Only `+` and `-` work with right hand side percentage value, e.g:
 

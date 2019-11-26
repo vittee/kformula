@@ -14,17 +14,22 @@ sealed class Symbol(name: String) {
     override fun hashCode() = System.identityHashCode(this)
 }
 
+internal val Symbol.isPercentage: Boolean
+    get() = this is ICanBePercentage && this.isPercentage
+
 abstract class ValueSymbol(name: String) : Symbol(name) {
     abstract val value: BigDecimal
 }
 
-abstract class DataSymbol(name: String) : ValueSymbol(name) {
+abstract class DataSymbol(name: String) : ValueSymbol(name), ICanBePercentage {
     init {
         when (name.first()) {
             '$', '%' -> {}
             else -> throw RuntimeException("Symbol name must begin with $ or %")
         }
     }
+
+    override val isPercentage = name.first() == '%'
 }
 
 class ConstValueSymbol(name: String, override val value: BigDecimal) : ValueSymbol(name) {

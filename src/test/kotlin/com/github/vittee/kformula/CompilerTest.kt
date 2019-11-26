@@ -246,13 +246,93 @@ class CompilerTest : BaseTest() {
 
     @Test
     fun `Variable expressions`() {
-        "%fifty*100" ee 50
+        "%fifty" ee 0.5
         "\$2pi" ee Math.PI*2
         "\$2pi^2" ee Math.PI*Math.PI*2*2
         "\$external" ee Math.PI*3
         "\$record.value" ee 99
         "\$ตัวแปร" ee 999
         "\$変数" ee 9999
+    }
+
+    @Test
+    fun `Percentage operations with number`() {
+        "50% + 1" ee 1.5
+        "%fifty + 1" ee 1.5
+        "100% - 0.5" ee 0.5
+        "50% * 2" ee 1
+        "%fifty * 2" ee 1
+        "50% / 5" ee 0.1
+        "%fifty / 5" ee 0.1
+        "100% ^ 3" ee 1
+        "200% ^ 3" ee 8
+    }
+
+    @Test
+    fun `Percentage operations with percentage`() {
+        "50% + 50%" ee 1
+        "%fifty + %fifty" ee 1
+        "100% - 20%" ee 0.8
+        "50% * 100%" ee 0.5
+        "%fifty * 100%" ee 0.5
+        "50% * 50%" ee 0.25
+        "%fifty * %fifty" ee 0.25
+        "50% / 50%" ee 1
+        "%fifty / %fifty" ee 1
+        "50% ^ 100%" ee 0.5
+        "%fifty ^ 100%" ee 0.5
+    }
+
+    @Test
+    fun `Number operations with percentage`() {
+        "100 + 20%" ee 120
+        "200 + %fifty" ee 300
+        "100 - 20%" ee 80
+        "300 - %fifty" ee 150
+        "500 * 20%" ee 100
+        "500 * %fifty" ee 250
+        "500 / 20%" ee 2500
+        "500 / %fifty" ee 1000
+        "81 ^ 50%" ee 9
+        "81 ^ %fifty" ee 9
+    }
+
+    @Test
+    fun `Left hand side percentage operations`() {
+        "50% + 50% + 1" ee 2
+        "50% - 50% + 1" ee 1
+        "(50% + 50%) * 2" ee 2
+        "(50% + 50%) / 2" ee 0.5
+        "(50% * 3) * 2 ^ 3" ee 27
+        "(%fifty * 3) * 2 ^ 3" ee 27
+    }
+
+    @Test
+    fun `Right hand side percentage operations`() {
+        "100 + (50% + 50%)" ee 200
+        "100 + (50% + 2)" ee 350
+        "100 + (50% - 1)" ee 50
+        "60 + (100% * 2)" ee 180
+        "60 + (300% / 3)" ee 120
+        "100 - (50% + 50%)" ee 0
+        "60 - (50% + 2)" ee -90
+        "60 - (%fifty + 2)" ee -90
+        "100 * (50% + 30%)" ee 80
+        "24 / (50% + 30%)" ee 30
+        "(60 + 50%) + 50%" ee 135
+        "(60 + %fifty) + 50%" ee 135
+        "(60 - 50%) + 50%" ee 45
+        "(60 - %fifty) + 50%" ee 45
+        "100 * 40% + 50%" ee 60
+        "60 * 40% + 50%" ee 36
+        "400 / 50% + 50%" ee 1200
+    }
+
+    @Test
+    fun `Right recursive percentage operations`() {
+        "100 + 50% + 100%" ee 300
+        "60 + 50% + 50%" ee 135
+        "60 - 50% + 50%" ee 45
     }
 
     @Test

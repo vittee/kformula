@@ -72,20 +72,6 @@ abstract class BaseFormula {
         addMaxFunction()
         addClampFunction()
         addSqrtFunction()
-        addAddPercentageFunction()
-        addSubtractPercentageFunction()
-    }
-
-    protected fun addSubtractPercentageFunction() {
-        addFunction("subtract_percentage", "start", "percent") { args ->
-            args["start"].let { it - it * args["percent"] }
-        }
-    }
-
-    protected fun addAddPercentageFunction() {
-        addFunction("add_percentage", "start", "percent") { args ->
-            args["start"].let { it + it * args["percent"] }
-        }
     }
 
     protected fun addSqrtFunction() {

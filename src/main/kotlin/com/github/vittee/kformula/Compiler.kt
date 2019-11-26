@@ -322,13 +322,20 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
     }
 
     private fun readImmediate(): NumberExpr {
-        if (tokenizer.testNumber()) {
-            tokenizer.token?.literal?.let {
-                tokenizer.killToken()
-                return NumberExpr(it)
+        val expr = when (val tt = tokenizer.testAny(NUMBER, PERCENTAGE)) {
+            NUMBER, PERCENTAGE -> {
+                tokenizer.token?.literal?.let {
+                    tokenizer.killToken()
+
+                    when (tt) {
+                        PERCENTAGE -> PercentageExpr(it)
+                        else -> NumberExpr(it)
+                    }
+                }
             }
+            else -> null
         }
 
-        throw CompileError("Number or expression expected")
+        return expr ?: throw CompileError("Number or expression expected")
     }
 }

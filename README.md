@@ -6,7 +6,7 @@ Mathematical expression engine written in Kotlin, running on JVM.
 
 [![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin)
 [![Travis CI](https://img.shields.io/travis/vittee/kformula)](#)
-[![Kotlin 1.3.50](https://img.shields.io/badge/kotlin-1.3.50-blue)](http://kotlinlang.org)
+[![Kotlin 1.3.60](https://img.shields.io/badge/kotlin-1.3.60-blue)](http://kotlinlang.org)
 [![MIT License](https://img.shields.io/github/license/vittee/kformula)](https://github.com/vittee/kformula/blob/master/LICENSE)
 
 
@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     ...
-    implementation 'com.github.vittee.kformula:kformula:1.0.2'
+    implementation 'com.github.vittee.kformula:kformula:1.0.3'
     ...
 }
 ```
@@ -64,8 +64,6 @@ Table Of Contents
         - [max](#max)
         - [clamp](#clamp)
         - [sqrt](#sqrt)
-        - [add_percentage](#add_percentage)
-        - [subtract_percentage](#subtract_percentage)    
     - [Adding function](#adding-function)
         - [Function without parameter](#function-without-parameter)
         - [Function with parameters](#function-with-parameters)
@@ -89,7 +87,9 @@ Percentage numeric literal
  |  Literal  |  Value    |
  |-----------|-----------|
  |  `100%`   |   1.0     |
- |  `50%`    |   0.5      |
+ |  `50%`    |   0.5     |
+ 
+ They can be used in [percentage operations](#percentage-operations)
  
 Boolean
 ---------------
@@ -109,6 +109,8 @@ Example or valid variable names:
 | `$record.value`  |
 | `$ตัวแปร`  |
 | `$変数`  |
+
+Variable name that begin with `%` sign can be used in [percentage operations](#percentage-operations)
 
 Supported operators
 -------------------
@@ -261,6 +263,23 @@ Returns `0` if `$weight` is less than or equal 100
 
 ---
 
+Percentage operations
+---------------------
+Any variables with name started with `%` sign and any numbers that ended with `%` sign are considered as percentage values and can be used in *adding* and *subtracting* percentage from a value.
+
+Only `+` and `-` work with right hand side percentage value, e.g:
+
+| Expression | Result |
+|------------|--------|
+| 30 + 50%   |   45   |
+| 400 - 50%  |  200   |
+| 120 + %fifty |  180 | 
+| 400 - %discount |  300 |
+
+*Assuming that `%fifty` variable is `0.5` and `%discount` is `0.25`* 
+
+**Note:** Any other operations on percentage values will result in normal arithmetic operations and the result is still percentage value. 
+
 Usage
 =====
 
@@ -354,8 +373,6 @@ Built-in functions
 - [max](#max)
 - [clamp](#clamp)
 - [sqrt](#sqrt)
-- [add_percentage](#add_percentage)
-- [subtract_percentage](#subtract_percentage)
 
 ##### abs
 Returns the absolute value.
@@ -537,74 +554,6 @@ sqrt(2)
 ```
 
 Returns `1.414213562373095`
-
-##### add_percentage
-Add a percentage of the value.
-
-Syntax:
-```
-add_percentage(<value>, <percentage>)
-```
-
-Example:
-```
-add_percentage(500, 0.5)
-```
-
-Returns `750`
-
-```
-add_percentage(500, 50%)
-```
-
-Returns `750`
-
-```
-add_percentage(500, +50%)
-```
-
-Returns `750`
-
-```
-add_percentage(500, -50%)
-```
-
-Returns `250`
-
-##### subtract_percentage
-
-Subtract a percentage of the value.
-
-Syntax:
-```
-subtract_percentage(<value>, <percentage>)
-```
-
-Example:
-```
-subtract_percentage(500, 0.5)
-```
-
-Returns `250`
-
-```
-subtract_percentage(500, 50%)
-```
-
-Returns `250`
-
-```
-subtract_percentage(500, +50%)
-```
-
-Returns `250`
-
-Example:
-```
-subtract_percentage(500, -50%)
-```
-
-Returns `750`
 
 Adding function
 ---------------

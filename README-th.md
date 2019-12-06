@@ -43,6 +43,8 @@ dependencies {
     - [ตัวดำเนินการพิเศษ](#ตัวดำเนินการพิเศษ)
         - [IN Range](#in-range)
         - [NOT IN Range](#not-in-range)
+        - [IN Set](#in-set)
+        - [NOT IN Set](#not-in-set)        
         - [Ternary](#ไตรภาค-ternary)
   * [การใช้งาน](#การใช้งาน)
     - [การใช้งานทั่วไป](#การใช้งานทั่วไป)   

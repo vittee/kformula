@@ -47,6 +47,8 @@ Table Of Contents
     - [Special operators](#special-operators)
         - [IN Range](#in-range)
         - [NOT IN Range](#not-in-range)
+        - [IN Set](#in-set)
+        - [NOT IN Set](#not-in-set)
         - [Ternary](#ternary)
   * [Usage](#usage)
     - [Simple usage](#simple-usage)   

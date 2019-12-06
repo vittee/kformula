@@ -138,16 +138,30 @@ internal class IfThenElseValueExpr(val cond: Expr, val trueExpr: Expr, val false
     }.eval()
 }
 
-internal abstract class InExpr(val value: Expr, val begin: Expr, val end: Expr): Expr()
+internal abstract class InExpr : Expr()
 
 @Suppress("MemberVisibilityCanBePrivate")
-internal class InRangeExpr(value: Expr, begin: Expr, end: Expr): InExpr(value, begin, end) {
+internal class InRangeExpr(val value: Expr, val begin: Expr, val end: Expr) : InExpr() {
     override fun eval(): BigDecimal = (value.eval() in begin.eval()..end.eval()).toBigDecimal()
 }
 
 @Suppress("MemberVisibilityCanBePrivate")
-internal class NotInRangeExpr(val right: InRangeExpr): Expr() {
+internal class InSetExpr(val value: Expr, val elements: List<Expr>) : InExpr() {
+    override fun eval(): BigDecimal = value.eval().let { v ->
+        elements.any { it.eval() == v }.toBigDecimal()
+    }
+}
+
+@Suppress("MemberVisibilityCanBePrivate")
+internal class NotRangeExpr(val right: InExpr) : InExpr() {
     override fun eval(): BigDecimal = right.eval().toBool().not().toBigDecimal()
+}
+
+@Suppress("MemberVisibilityCanBePrivate")
+internal class NotInSetExpr(val value: Expr, val elements: List<Expr>) : Expr() {
+    override fun eval(): BigDecimal = value.eval().let { v ->
+        (!elements.any { it.eval() == v }).toBigDecimal()
+    }
 }
 
 internal abstract class SymbolExpr<S : Symbol>(val symbol: S) : Expr() {

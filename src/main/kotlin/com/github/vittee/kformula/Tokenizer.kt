@@ -102,7 +102,7 @@ internal class Tokenizer(private val source: String) {
 
         when (val c = next()) {
             ' ', '\t', '\r', '\n'  -> { }
-            '+', '-', '*', '/', '^', '(', ')', ',' -> tokenBuffer.append(c)
+            '+', '-', '*', '/', '^', '(', ')', '[', ']', ',' -> tokenBuffer.append(c)
             '!','>', '='  -> {
                 tokenBuffer.append(c)
                 match('=')
@@ -226,6 +226,8 @@ internal class Tokenizer(private val source: String) {
             "*" -> TIMES
             "/" -> DIVIDE
             "^" -> EXPONENT
+            "[" -> A_LEFT
+            "]" -> A_RIGHT
             "(" -> B_LEFT
             ")" -> B_RIGHT
             "," -> COMMA

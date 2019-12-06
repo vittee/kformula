@@ -239,6 +239,24 @@ class CompilerTest : BaseTest() {
     }
 
     @Test
+    fun `IN set`() {
+        "2 in [1,2,3,4]" ee 1
+        "9 in [1,2,3,4]" ee 0
+    }
+
+    @Test
+    fun `NOT IN set`() {
+        "2 not in [1,2,3,4]" ee 0
+        "9 not in [1,2,3,4]" ee 1
+    }
+
+    @Test
+    fun `!IN set`() {
+        "2 !in [1,2,3,4]" ee 0
+        "9 !in [1,2,3,4]" ee 1
+    }
+
+    @Test
     fun `Constant expression`() {
         "CONST1" ee 12345
         "CONST1-CONST1" ee 0

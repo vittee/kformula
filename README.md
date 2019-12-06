@@ -47,6 +47,8 @@ Table Of Contents
     - [Special operators](#special-operators)
         - [IN Range](#in-range)
         - [NOT IN Range](#not-in-range)
+        - [IN Set](#in-set)
+        - [NOT IN Set](#not-in-set)
         - [Ternary](#ternary)
   * [Usage](#usage)
     - [Simple usage](#simple-usage)   
@@ -212,6 +214,85 @@ Returns `true`
 Returns `true`
 
 ---
+
+##### IN set
+Syntax:
+```
+<expr> in [<elements>]
+```
+Returns `true` if `<expr>` is a member of the set specified by `<elements>`
+
+Example:
+```
+5 in [5,10,15,20]
+```
+Returns `true`
+
+```
+20 in [5,10,15,20]
+```
+Returns `true`
+
+```
+4 in [5,10,15,20]     
+```
+Returns `false`
+
+```
+12 in [5,10,15,20]     
+```
+Returns `false`
+
+```
+21 in [5,10,15,20]     
+```
+Returns `false`
+
+---
+
+##### NOT IN set
+
+Syntax:
+```
+not in [<elements>]
+!in [<elements>]
+```
+
+Returns `true` if `<expr>` is **NOT** a member of a set specified by `<elements>`
+
+Example:
+```
+5 not in [5,10,15,20]
+5 !in [5,10,15,20]
+```
+Returns `false`
+
+```
+20 not in [5,10,15,20]
+20 !in [5,10,15,20]
+```
+Returns `false`
+
+```
+4 not [5,10,15,20]
+4 !in [5,10,15,20]      
+```
+Returns `true`
+
+```
+12 not [5,10,15,20]
+12 !in [5,10,15,20]      
+```
+Returns `true`
+
+```
+21 not [5,10,15,20]
+21 !in [5,10,15,20]
+```
+Returns `true`
+
+---
+
 ##### Ternary
 Syntax #1:
 ```

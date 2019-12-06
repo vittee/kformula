@@ -31,7 +31,7 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
             val tt = tokenizer.testDeleteAny(EQUAL, EQUAL_EQUAL, NOT_EQ, EX_EQ, LESS, LESS_EQ, GREATER, GREATER_EQ, IN)
             left = when (tt) {
                 NONE -> break@loop
-                IN -> readInRangeExpr(left)
+                IN -> readInExpr(left)
                 else -> {
                     val right = readExprAdd()
 
@@ -58,7 +58,7 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
             val tt = tokenizer.testDeleteAny(PLUS, MINUS, OR, NOT, EXCLAMATION)
             left = when (tt) {
                 NONE -> break@loop
-                NOT, EXCLAMATION -> readNotInRangeExpr(left)
+                NOT, EXCLAMATION -> readNotInExpr(left)
                 else -> {
                     val right = readExprMulti()
                     when (tt) {
@@ -174,9 +174,7 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
         return IfThenElseValueExpr(cond, trueExpr, falseExpr)
     }
 
-    private fun readInRangeExpr(left: Expr): InRangeExpr {
-        val hasParenthesis = tokenizer.testDelete(B_LEFT)
-
+    private fun readInRangeExpr(left: Expr, hasParenthesis: Boolean): InRangeExpr {
         val begin = readExpr()
 
         if (!tokenizer.testDelete(DOT_DOT)) {
@@ -188,12 +186,43 @@ class Compiler(private val table: SymbolTable<Symbol> = SymbolTable()) {
         return InRangeExpr(left, begin, end)
     }
 
-    private fun readNotInRangeExpr(left: Expr): NotInRangeExpr {
+    private fun readInSetExpr(left: Expr, hasParenthesis: Boolean) : InSetExpr {
+        val elements = mutableListOf<Expr>()
+
+        if (!tokenizer.testDelete(A_RIGHT)) {
+            do {
+                elements += readExpr()
+            } while (tokenizer.testDelete(COMMA) && tokenizer.hasTokens())
+
+            if (!tokenizer.testDelete(A_RIGHT)) {
+                throw CompileError("] expected")
+            }
+        }
+
+        if (hasParenthesis) {
+            if (!tokenizer.testDelete(B_RIGHT)) {
+                throw CompileError(") expected")
+            }
+        }
+
+        return InSetExpr(left, elements)
+    }
+
+    private fun readInExpr(left: Expr): InExpr {
+        val hasParenthesis = tokenizer.testDelete(B_LEFT)
+
+        return when {
+            tokenizer.testDelete(A_LEFT) -> readInSetExpr(left, hasParenthesis)
+            else -> readInRangeExpr(left, hasParenthesis)
+        }
+    }
+
+    private fun readNotInExpr(left: Expr): NotRangeExpr {
         if (!tokenizer.testDelete(IN)) {
             throw CompileError("IN expected")
         }
 
-        return NotInRangeExpr(readInRangeExpr(left))
+        return NotRangeExpr(readInExpr(left))
     }
 
     private fun readBracket(): Expr {

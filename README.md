@@ -14,9 +14,9 @@ With KFormula, you can parse simple mathematical expression text and get the eva
 
 You can add variables/constants, or beyond that, you can define your own function and expose the logic to the engine.
 
-This way you can make your application be able to accept mathematical expression from user's input, or even from database. 
+This way, you can make your application to be able to accept mathematical expression from user's input, or even from database. 
 
-If the calculation should be made, simply change the expression to get the new calculation logic apply to your application without recompiling!
+If the calculation should be made, simply change the expression to get the new calculation logic applied to your application without recompiling!
 
 Install
 -------
